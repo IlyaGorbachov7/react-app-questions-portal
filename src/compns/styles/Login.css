@@ -1,0 +1,38 @@
+p {
+    padding: 0;
+    margin: 5px;
+    font-size: 20px;
+}
+
+/* Распложение и размеры*/
+.centerXY {
+    margin-top: 15%;
+    margin-left: 37%;
+    margin-right: 37%;
+
+}
+
+.block-size {
+    width: 400px;
+}
+
+.block-color {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* стиль текста цвет размер и др.*/
+.text-size-bar {
+    font-size: 25px;
+}
+
+.color-text-logo {
+    color: black;
+}
+
+.color-text-type {
+    color: dodgerblue;
+}
+
+.font-weight-600 {
+    font-weight: 600;
+}
