@@ -44,7 +44,7 @@ const Registration = () => {
                     <label htmlFor="lastNameId">Phone Number</label>
                 </div>
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
-                        onClick={login}>SIGN UP
+                        onClick={registrat}>SIGN UP
                 </button>
                 <p className="mt-2">Already have account account? <a href="/login"
                                                            className="color-text-type font-weight-600">Log in</a></p>
