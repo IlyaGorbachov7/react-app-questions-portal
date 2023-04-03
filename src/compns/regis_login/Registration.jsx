@@ -13,35 +13,35 @@ const Registration = () => {
                 <p className="font-weight-600">Sign Up</p>
                 <div className="form-floating">
                     {/*дабавить обработчик*/}
-                    <input type="email" className="block-size form-control" id="inputEmailId"
+                    <input type="email" className="block-size form-control" id="inputEmailRegistrationId"
                            placeholder="name@example.com"/>
-                    <label htmlFor="inputEmailId">Email address</label>
+                    <label htmlFor="inputEmailRegistrationId">Email address</label>
                 </div>
                 <div className="form-floating mt-2">
                     {/*дабавить обработчик*/}
-                    <input type="password" className="block-size form-control" id="passwordId0" placeholder="Password"/>
-                    <label htmlFor="passwordId0">Password</label>
+                    <input type="password" className="block-size form-control" id="inputPasswordRegistrationId0" placeholder="Password"/>
+                    <label htmlFor="inputPasswordRegistrationId0">Password</label>
                 </div>
                 <div className="form-floating mt-2">
                     {/*дабавить обработчик*/}
-                    <input type="password" className="block-size form-control" id="passwordId1"
+                    <input type="password" className="block-size form-control" id="inputPasswordRegistrationId1"
                            placeholder="Confirm Password"/>
-                    <label htmlFor="passwordId1">Confirm Password</label>
+                    <label htmlFor="inputPasswordRegistrationId1">Confirm Password</label>
                 </div>
                 <div className="form-floating mt-2">
                     {/*дабавить обработчик*/}
-                    <input type="text" className="block-size form-control" id="firstNameId" placeholder="First Name"/>
-                    <label htmlFor="firstNameId">First Name</label>
+                    <input type="text" className="block-size form-control" id="inputFirstNameRegistrationId" placeholder="First Name"/>
+                    <label htmlFor="inputFirstNameRegistrationId">First Name</label>
                 </div>
                 <div className="form-floating mt-2">
                     {/*дабавить обработчик*/}
-                    <input type="text" className="block-size form-control" id="lastNameId" placeholder="Last Name"/>
-                    <label htmlFor="lastNameId">Last Name</label>
+                    <input type="text" className="block-size form-control" id="inputLastNameRegistrationId" placeholder="Last Name"/>
+                    <label htmlFor="inputLastNameRegistrationId">Last Name</label>
                 </div>
                 <div className="form-floating mt-2">
                     {/*дабавить обработчик*/}
-                    <input type="text" className="block-size form-control" id="phoneNumberId" placeholder="Phone Number"/>
-                    <label htmlFor="lastNameId">Phone Number</label>
+                    <input type="text" className="block-size form-control" id="inputPhoneRegistrationId" placeholder="Phone Number"/>
+                    <label htmlFor="inputPhoneRegistrationId">Phone Number</label>
                 </div>
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
                         onClick={registrat}>SIGN UP
