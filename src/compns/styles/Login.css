@@ -2,21 +2,24 @@ p {
     padding: 0;
     margin: 5px;
     font-size: 20px;
+    text-align: center;
 }
 
 /* Распложение и размеры*/
 .centerXY {
-    margin-top: 15%;
+    margin-top: 10%;
     margin-left: 37%;
     margin-right: 37%;
-
 }
 
+.block-border-radius{
+    border-radius: 20px;
+}
 .block-size {
-    width: 400px;
+    min-width: 400px;
 }
 
-.block-color {
+.block-shadow-color {
     box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
