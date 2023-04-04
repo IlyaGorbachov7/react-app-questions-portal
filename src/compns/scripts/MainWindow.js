@@ -1,26 +1,51 @@
+/**
+ * Здесь нужно в зависимости от кномпи ПЕРЕНАПРАВИТЬ на другой компанент
+ */
 export const btnGroupClick = (e) => {
-    // sterilizationBtnActive(e)
 
 }
 
-function sterilizationBtnActive(e) {
-    // console.log(e.target)
-    let btnClick = e.target;
-    let baseURI = btnClick.baseURI;
-    console.log(baseURI)
-    let color = "dodgerblue";
+/**
+ * Изменяет цвет кнопак на панели.
+ * Делает визулаьно ее активной, когда открвается (нажимеается) какая либо кнопка.
+ */
+export const btnYourQuestMainWindowId = "btnYourQuestMainWindowId";
+export const btnAnswerQuestMainWindowId = "btnAnswerQuestMainWindowId";
+export const btnUserNameMainWindowId = "btnUserNameMainWindowId"
 
-    if (btnClick.id === "btnEditProfileMainWindowId" || btnClick.id === "btnLogOutMainWindowId" || btnClick.id === "btnDeleteProfileMainWindowId") {
-        console.log(    document.getElementById("btnGroupMainWindowId"))
-        document.getElementById("btnGroupMainWindowId").style.color = color;
-    } else {
-        btnClick.style.color = color;
+export function startSterilizationBtnActive(urlStr) {
+    function initArrayBtnOnBarActonPanel() {
+        debugger
+        let arrBtnId = [btnYourQuestMainWindowId, btnAnswerQuestMainWindowId, btnUserNameMainWindowId];
+        debugger
+        return arrBtnId.map(btnId => {
+            const btn = document.getElementById(btnId);
+            debugger
+            console.log(btn)
+            debugger
+            return btn;
+        })
     }
-    btnClick.style.fontWeight = 600;
 
-}
+    function getBtnCurrentAction(arrBtnActions, url) {
+        let btnAction;
+        if (url === "/questions/your") {
+            btnAction = arrBtnActions.find(btnA => btnA.id === btnYourQuestMainWindowId)
+        } else if (url === "/questions/answer") {
+            btnAction = arrBtnActions.find(btnA => btnA.id === btnAnswerQuestMainWindowId)
+        } else if (url === "/profile/edit" || url === "/profile/delete") {
+            btnAction = arrBtnActions.find(btnA => btnA.id === btnUserNameMainWindowId)
+        }
+        return btnAction;
+    }
 
-function startSterilizationBtnActive(url) {
-    // console.log(e.target)
-
+    console.log(urlStr)
+    let color = "dodgerblue";
+    let arrBtnActions = initArrayBtnOnBarActonPanel();
+    debugger
+    let curActionBtn = getBtnCurrentAction(arrBtnActions, urlStr)
+    debugger
+    curActionBtn.style.color = color;
+    arrBtnActions = arrBtnActions.filter(btnA => btnA !== curActionBtn) // удалю из массива кнопку текущей активности
+    arrBtnActions.forEach(btnA => btnA.style.color = "black") // у хотябы у одного меняю цвет с синяго на белый
 }

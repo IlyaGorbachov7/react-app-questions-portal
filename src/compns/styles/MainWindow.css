@@ -14,7 +14,7 @@
 
 .btn-panel-style:focus {
     border: none;
-    color: dodgerblue;
+    /*color: dodgerblue;*/
 }
 
 .btn-dropdown:active {

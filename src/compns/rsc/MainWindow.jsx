@@ -1,7 +1,12 @@
 import React from 'react';
 import {BrowserRouter} from "react-router-dom";
 import '../styles/MainWindow.css'
-import {btnGroupClick} from "../scripts/MainWindow";
+import {
+    btnAnswerQuestMainWindowId,
+    btnGroupClick,
+    btnUserNameMainWindowId,
+    btnYourQuestMainWindowId
+} from "../scripts/MainWindow";
 
 const MainWindow = () => {
     return (
@@ -10,20 +15,16 @@ const MainWindow = () => {
                 <div className="me-lg-auto font-weight-600 font-bar-size">
                     <span className="color-text-logo">LOGO</span><span className="color-text-type">TYPE</span>
                 </div>
-
-
-
                 <div className="btn-group" role="group">
-                    <button id="btnYourQuestMainWindowId" className="btn me-5 btn-panel-style " type="button"
-                            onClick={btnGroupClick}>
-                        Your questions
+                    <button id={btnYourQuestMainWindowId} className="btn me-5 btn-panel-style " type="button"
+                            onClick={btnGroupClick}>Your questions
                     </button>
-                    <button id="btnAnswerQuestMainWindowId" className="btn ms-5 btn-panel-style" type="button"
-                            onClick={btnGroupClick}>Answer the
-                        questions
+                    <button id={btnAnswerQuestMainWindowId} className="btn ms-5 btn-panel-style" type="button"
+                            onClick={btnGroupClick}>Answer the questions
                     </button>
                     <div id="btnGroupMainWindowId" className="btn-group ms-5">
-                        <button type="button" className="btn dropdown-toggle btn-panel-style font-weight-600"
+                        <button id={btnUserNameMainWindowId} type="button"
+                                className="btn dropdown-toggle btn-panel-style font-weight-600"
                                 data-bs-toggle="dropdown" aria-expanded="false">Ilya Gorbachev
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end">
