@@ -1,0 +1,23 @@
+.font-bar-size {
+    font-size: 26px;
+}
+
+.main-bar-border-radius {
+    border-radius: 10px;
+}
+
+
+.btn-panel-style {
+    border: none;
+
+}
+
+.btn-panel-style:focus {
+    border: none;
+    color: dodgerblue;
+}
+
+.btn-dropdown:active {
+    background: white;
+    color: black;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {login} from "../scripts/Login";
+import {login, registrat} from "../scripts/Login";
 import '../styles/Registration.css'
 import '../styles/Login.css'
 
@@ -8,9 +8,9 @@ const Registration = () => {
     return (
         <div className="block-size centerXY d-flex flex-column align-items-center">
             <div className="block-shadow-color block-border-radius p-2">
-                <p className="text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
+                <p className="para-pmft text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
                     className="color-text-type">TYPE</span></p>
-                <p className="font-weight-600">Sign Up</p>
+                <p className="para-pmft font-weight-600">Sign Up</p>
                 <div className="form-floating">
                     {/*дабавить обработчик*/}
                     <input type="email" className="block-size form-control" id="inputEmailRegistrationId"
@@ -46,7 +46,7 @@ const Registration = () => {
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
                         onClick={registrat}>SIGN UP
                 </button>
-                <p className="mt-2">Already have account account? <a href="/login"
+                <p className="para-pmft mt-2">Already have account account? <a href="/login"
                                                            className="color-text-type font-weight-600">Log in</a></p>
             </div>
         </div>

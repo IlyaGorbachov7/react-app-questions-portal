@@ -6,9 +6,9 @@ const ForgetPassword = () => {
     return (<div>
         {(!isSendEmail) ? (<div className="centerXY d-flex flex-column align-items-center">
                 <div className="block-shadow-color block-border-radius p-2">
-                    <p className="text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
+                    <p className="para-pmft text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
                         className="color-text-type">TYPE</span></p>
-                    <p className="font-weight-600">Reset password</p>
+                    <p className="para-pmft font-weight-600">Reset password</p>
                     <div className="form-floating">
                         {/*дабавить обработчик*/}
                         <input type="email" className="block-size form-control" id="inputEmailForgetPasswordId0"
@@ -22,9 +22,9 @@ const ForgetPassword = () => {
             </div>)
             : (  <div className="centerXY d-flex flex-column align-items-center">
                 <div className="block-shadow-color block-border-radius p-2">
-                    <p className="text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
+                    <p className="para-pmft text-size-bar font-weight-600"><span className="color-text-logo">LOGO</span><span
                         className="color-text-type">TYPE</span></p>
-                    <p className="font-weight-600">Change password</p>
+                    <p className="para-pmft font-weight-600">Change password</p>
                     <div className="form-floating">
                         {/*дабавить обработчик*/}
                         <input type="email" className="block-size form-control" id="inputEmailForgetPasswordId1"
