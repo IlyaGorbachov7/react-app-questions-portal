@@ -3,7 +3,7 @@ import {startSterilizationBtnActive} from "../../scripts/MainWindow";
 
 const AnswerQuest = () => {
     useEffect(() => {
-        startSterilizationBtnActive("/questions/your")
+        startSterilizationBtnActive("/questions/answer")
     }, [])
 
     return (

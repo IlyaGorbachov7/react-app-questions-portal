@@ -16,11 +16,11 @@ function App() {
             {/*<Registration/>*/}
             {/*<ForgetPassword/>*/}
             <MainWindow/>
-            <DeleteProfile/>
+            {/*<DeleteProfile/>*/}
             {/*<Registration/>*/}
             {/*<YourQuest/>*/}
-            {/*<AnswerQuest/>*/}
-            <EditProfile/>
+            <AnswerQuest/>
+            {/*<EditProfile/>*/}
         </div>
     );
 }
