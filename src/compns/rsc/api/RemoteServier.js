@@ -1,1 +1,5 @@
-export const appDamien = "http://localhost:3000"
+import axios from "axios";
+
+export default axios.create({
+    baseURL: "http://localhost:8080",
+});

@@ -8,12 +8,15 @@ import DeleteProfile from "./compns/rsc/sub_mainwndw/DeleteProfile";
 import YourQuest from "./compns/rsc/sub_mainwndw/YourQuest";
 import AnswerQuest from "./compns/rsc/sub_mainwndw/AnswerQuest";
 import EditProfile from "./compns/rsc/sub_mainwndw/EditProfile";
+import ErrorModal from "./compns/rsc/ErrrorModal";
+import {useState} from "react";
 
 function App() {
     return (
         <div>
-            <Login/>
-            {/*<Registration/>*/}
+            {/*<Login/>*/}
+            {/*<ErrorModal visible={modal} setVisible={setModal}/>*/}
+            <Registration/>
             {/*<ForgetPassword/>*/}
             {/*<MainWindow/>*/}
             {/*<DeleteProfile/>*/}
