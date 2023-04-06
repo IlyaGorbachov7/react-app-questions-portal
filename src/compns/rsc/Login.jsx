@@ -2,39 +2,30 @@ import React, {useEffect, useState} from 'react';
 import '../styles/Login.css'
 import ErrorModal from "./ErrrorModal";
 import ax from './api/RemoteServier'
+import Requests from "./api/Requests";
+import {prepareHtmlRequestMsg} from "../scripts/Registration";
 
 /*https://stackoverflow.com/questions/69294536/where-to-store-jwt-token-in-react-client-side-in-secure-way
 
 * https://medium.com/@sannanmalikofficial/how-to-secure-jwt-token-in-react-2dbc23a514a6
 * */
 const Login = () => {
-    const [modal, setModal] = useState(true);
-
+    const [visibleError, setVisibleError] = useState({
+        htmlE: <></>,
+        visible: false
+    })
     const [loginData, setLoginData] = useState({
         email: "", password: "", rememberMe: false
     });
 
     async function login(e) {
         e.preventDefault()
-        const controller = new AbortController();
-
         try {
-            const response = await ax.get("/login", {
-                signal: controller.signal
-            })
-        } catch (e) {
-            console.log(e)
+            const data = await Requests.login(loginData);
+            console.log("Login is successfully!")
+        } catch (err) {
+            setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
         }
-
-        return () => {
-            controller.abort();
-        }
-
-        // request on the server on the login
-        // if good : navigate on the MainWindow page /questions/your
-        // el   se
-        // handler exception from server
-        // view error if pres ent
     }
 
     useEffect(function () {
@@ -42,9 +33,8 @@ const Login = () => {
     }, [loginData])
 
     return (<div>
-        <ErrorModal visible={modal} setVisible={setModal}>
-            Вы должны вводить значени в приделах рахмумного
-        </ErrorModal>
+        <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
+
         <div className="centerXY d-flex flex-column align-items-center">
             <div className="block-shadow-color block-border-radius p-2">
                 <p className="para-pmft text-size-bar font-weight-600"><span

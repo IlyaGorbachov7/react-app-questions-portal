@@ -19,7 +19,7 @@ export function prepareHtmlRequestMsg(errorDataRequest) {
     return (<div className=""> {Object.entries(errorDataRequest)
         .map(([key, value]) => {
             return (<div key={key} className="d-flex mb-2 list-group list-group-horizontal">
-                <div className="col m-0  list-group-item">{key}</div>
+                <div className="col m-0 col-md-3 list-group-item">{key}</div>
                 <div className="col m-0  list-group-item">{value}</div>
             </div>)
         })}

@@ -28,5 +28,6 @@ export default class Requests {
             {
                 withCredentials: false
             })
+        return response.data;
     }
 }
