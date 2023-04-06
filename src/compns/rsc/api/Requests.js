@@ -23,8 +23,6 @@ export default class Requests {
         return response.data;
     }
 
-    d
-
     static async login(loginData) {
         const response = await ax.post("/users/login", loginData,
             {

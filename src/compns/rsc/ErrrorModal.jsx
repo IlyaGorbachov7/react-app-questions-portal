@@ -11,7 +11,7 @@ const ErrorModal = ({children, visibleError, setVisible}) => {
                 </Modal.Header>
                 <Modal.Body>{visibleError.htmlE}</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setVisible(false)}>
+                    <Button variant="secondary" onClick={() => setVisible({visible: false, visibleError: <></>})}>
                         Close
                     </Button>
                 </Modal.Footer>

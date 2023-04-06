@@ -1,4 +1,4 @@
-import React from "@types/react";
+import React from "react";
 
 export function prepareHtmlMsgErrorNoMatchesPassword() {
     return <span>Confirm password don't matches your password.</span>;
@@ -15,12 +15,13 @@ export function prepareHtmlMsgErrorNoMatchesPassword() {
  * <p>
  * phone: "Fields don't should be blank"
  */
-export function prepareHtmlRequestMsgError(errorDataRequest) {
-    return Object.entries(errorDataRequest)
+export function prepareHtmlRequestMsg(errorDataRequest) {
+    return (<div className=""> {Object.entries(errorDataRequest)
         .map(([key, value]) => {
             return (<div key={key} className="d-flex mb-2 list-group list-group-horizontal">
-                <div className="list-group-item">{key}</div>
-                <div className="flex-grow-1 list-group-item">{value}</div>
+                <div className="col m-0  list-group-item">{key}</div>
+                <div className="col m-0  list-group-item">{value}</div>
             </div>)
-        });
+        })}
+    </div>)
 }

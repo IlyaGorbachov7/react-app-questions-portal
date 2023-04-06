@@ -3,7 +3,8 @@ import '../styles/Registration.css'
 import '../styles/Login.css'
 import ErrorModal from "./ErrrorModal";
 import Requests from "./api/Requests";
-import {prepareHtmlMsgErrorNoMatchesPassword, prepareHtmlRequestMsgError} from "../scripts/Registration";
+import {prepareHtmlMsgErrorNoMatchesPassword, prepareHtmlRequestMsg} from "../scripts/Registration";
+import ActionModal from "./ActionModal";
 
 const Registration = () => {
     const [regisData, setRegisData] = useState({
@@ -18,6 +19,13 @@ const Registration = () => {
         htmlE: <></>,
         visible: false
     })
+    const [visibleAction, setVisibleAction] = useState({
+        visible: false,
+        btnName: "",
+        msgAction: "",
+        callbackAction: () => {
+        }
+    })
 
     async function register(e) {
         e.preventDefault();
@@ -26,24 +34,26 @@ const Registration = () => {
             return;
         }
         try {
-            const response = await Requests.registration(regisData)
-            console.log(response)
+            const data = await Requests.registration(regisData)
+            console.log("Registration is successfully!")
+            setVisibleAction({
+                visible: true,
+                btnName: "Log In",
+                msgAction: prepareHtmlRequestMsg(data),
+                callbackAction: (e) => {
+                    e.preventDefault()
+                    console.log("navigate to /login page")
+                }
+            })
         } catch (err) {
-            setVisibleError({htmlE: prepareHtmlRequestMsgError(err.response.data), visible: true})
+            setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
         }
-
-
-        // request on the server on the registration
-        // if good : navigate on the Login page /login
-        // else
-        // handler exception from server
-        // view error if present
     }
 
     return (
         <div>
             <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
-
+            <ActionModal visibleAction={visibleAction} setVisibleAction={setVisibleAction}/>
             <div className="block-size centerXY d-flex flex-column align-items-center">
                 <div className="block-shadow-color block-border-radius p-2">
                     <p className="para-pmft text-size-bar font-weight-600"><span
@@ -103,7 +113,8 @@ const Registration = () => {
                             onClick={register}>SIGN UP
                     </button>
                     <p className="para-pmft mt-2">Already have account account? <a href="/login"
-                                                                                   className="color-text-type font-weight-600">Log in</a></p>
+                                                                                   className="color-text-type font-weight-600">Log
+                        in</a></p>
                 </div>
             </div>
         </div>
