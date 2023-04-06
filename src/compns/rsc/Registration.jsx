@@ -3,6 +3,7 @@ import '../styles/Registration.css'
 import '../styles/Login.css'
 import ErrorModal from "./ErrrorModal";
 import Requests from "./api/Requests";
+import {prepareHtmlMsgErrorNoMatchesPassword, prepareHtmlRequestMsgError} from "../scripts/Registration";
 
 const Registration = () => {
     const [regisData, setRegisData] = useState({
@@ -13,22 +14,24 @@ const Registration = () => {
         lastName: "",
         phone: ""
     });
-    const [visible, setVisible] = useState(false);
-    const [error, setError] = useState("");
+    const [visibleError, setVisibleError] = useState({
+        htmlE: <></>,
+        visible: false
+    })
 
     async function register(e) {
         e.preventDefault();
         if (regisData.password !== regisData.confirmPassword) {
-            setError("Confirm password don't matches your password.")
-            setVisible(true)
+            setVisibleError({htmlE: prepareHtmlMsgErrorNoMatchesPassword(), visible: true})
             return;
         }
-        try{
+        try {
             const response = await Requests.registration(regisData)
             console.log(response)
-        }catch (err){
-            // console.log(err)
+        } catch (err) {
+            setVisibleError({htmlE: prepareHtmlRequestMsgError(err.response.data), visible: true})
         }
+
 
         // request on the server on the registration
         // if good : navigate on the Login page /login
@@ -39,9 +42,8 @@ const Registration = () => {
 
     return (
         <div>
-            <ErrorModal visible={visible} setVisible={setVisible}>
-                {error}
-            </ErrorModal>
+            <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
+
             <div className="block-size centerXY d-flex flex-column align-items-center">
                 <div className="block-shadow-color block-border-radius p-2">
                     <p className="para-pmft text-size-bar font-weight-600"><span
@@ -101,8 +103,7 @@ const Registration = () => {
                             onClick={register}>SIGN UP
                     </button>
                     <p className="para-pmft mt-2">Already have account account? <a href="/login"
-                                                                                   className="color-text-type font-weight-600">Log
-                        in</a></p>
+                                                                                   className="color-text-type font-weight-600">Log in</a></p>
                 </div>
             </div>
         </div>
