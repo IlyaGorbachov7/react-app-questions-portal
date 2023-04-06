@@ -1,18 +1,3 @@
-/**
- * Login component
- */
-export function login(e) {
-    e.preventDefault()
-    // логинимся и переходим на станцыу вопросов
-}
-
-/**
- * Registration component
- */
-export function registrat(e) {
-    e.preventDefault();
-    // регистируемя, после переходим на странцу лоигации
-}
 
 /**
  * ForgetPassword component

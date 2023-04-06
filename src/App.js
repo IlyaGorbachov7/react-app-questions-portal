@@ -12,14 +12,14 @@ import EditProfile from "./compns/rsc/sub_mainwndw/EditProfile";
 function App() {
     return (
         <div>
-            {/*<Login/>*/}
+            <Login/>
             {/*<Registration/>*/}
             {/*<ForgetPassword/>*/}
-            <MainWindow/>
+            {/*<MainWindow/>*/}
             {/*<DeleteProfile/>*/}
             {/*<Registration/>*/}
             {/*<YourQuest/>*/}
-            <AnswerQuest/>
+            {/*<AnswerQuest/>*/}
             {/*<EditProfile/>*/}
         </div>
     );

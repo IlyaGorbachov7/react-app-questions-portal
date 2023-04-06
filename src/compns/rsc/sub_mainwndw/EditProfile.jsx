@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {startSterilizationBtnActive} from "../../scripts/MainWindow";
-import {changePassword, editProfile, registrat} from "../../scripts/Login";
+import {editProfile} from "../../scripts/Login";
 
 const EditProfile = () => {
     useEffect(() => {
