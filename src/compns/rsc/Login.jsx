@@ -26,9 +26,9 @@ const Login = () => {
     async function login(e) {
         e.preventDefault()
         try {
-            const token = await Requests.login({email: loginData.email, password: loginData.password});
-            setToken(token)
-            console.log(token)
+            const data = await Requests.login({email: loginData.email, password: loginData.password});
+            setToken(data.token)
+            console.log(data.token)
             console.log("Login is successfully!")
             navigate("/main-window/questions/your")
         } catch (err) {
@@ -72,15 +72,14 @@ const Login = () => {
                         /> Remember me</label>
                     </div>
                     <div className="col color-text-type text-end font-weight-600">
-                        <a href="/forget-password">Forget your password?</a>
+                        <Link to="/forget">Forget your password?</Link>
                     </div>
                 </div>
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
                         onClick={login}>LOG IN
                 </button>
-                <p className="para-pmft mt-2">Don't have account? <Link to="/registration"
-                                                                        className="color-text-type font-weight-600">Sing
-                    Up</Link></p>
+                <p className="para-pmft mt-2">Don't have account? <Link to="/register"
+                                                                        className="color-text-type font-weight-600">Sing Up</Link></p>
             </div>
         </div>
     </div>);
