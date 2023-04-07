@@ -5,6 +5,7 @@ import ErrorModal from "./ErrrorModal";
 import Requests from "./api/Requests";
 import {prepareHtmlMsgErrorNoMatchesPassword, prepareHtmlRequestMsg} from "../scripts/Registration";
 import ActionModal from "./ActionModal";
+import {Link} from "react-router-dom";
 
 const Registration = () => {
     const [regisData, setRegisData] = useState({
@@ -112,9 +113,9 @@ const Registration = () => {
                     <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
                             onClick={register}>SIGN UP
                     </button>
-                    <p className="para-pmft mt-2">Already have account account? <a href="/login"
+                    <p className="para-pmft mt-2">Already have account account? <Link to="/login"
                                                                                    className="color-text-type font-weight-600">Log
-                        in</a></p>
+                        in</Link></p>
                 </div>
             </div>
         </div>

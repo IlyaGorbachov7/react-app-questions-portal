@@ -1,5 +1,4 @@
 import React from 'react';
-import {BrowserRouter} from "react-router-dom";
 import '../styles/MainWindow.css'
 import {
     btnAnswerQuestMainWindowId,
@@ -7,14 +6,16 @@ import {
     btnUserNameMainWindowId,
     btnYourQuestMainWindowId
 } from "../scripts/MainWindow";
-import {Route, Routes, useNavigate} from "react-router";
+import {Navigate, Route, Routes, useNavigate} from "react-router";
 import YourQuest from "./sub_mainwndw/YourQuest";
 import AnswerQuest from "./sub_mainwndw/AnswerQuest";
 import DeleteProfile from "./sub_mainwndw/DeleteProfile";
 import EditProfile from "./sub_mainwndw/EditProfile";
+import useToken from "./hooks/useToken";
 import ErrorPage from "./Error";
 
 const MainWindow = () => {
+    const [token, setToken, clearToken] = useToken();
     const navigate = useNavigate()
 
     return (
@@ -55,6 +56,7 @@ const MainWindow = () => {
                                             type="button"
                                             onClick={(e) => {
                                                 e.preventDefault()
+                                                clearToken()
                                                 navigate("/")
                                             }}>Log Out
                                     </button>
@@ -75,11 +77,12 @@ const MainWindow = () => {
                 </div>
             </div>
             <Routes children='/main-window'>
+
                 <Route path='/questions/your' element={<YourQuest/>}/>
                 <Route path='/questions/answer' element={<AnswerQuest/>}/>
                 <Route path='/profile/delete' element={<DeleteProfile/>}/>
                 <Route path='/profile/edit' element={<EditProfile/>}/>
-                <Route path="*" handle={() => navigate("/")}/>
+                <Route path="*" element={<Navigate to={'/error-page'}/>}/>
             </Routes>
         </>
     );

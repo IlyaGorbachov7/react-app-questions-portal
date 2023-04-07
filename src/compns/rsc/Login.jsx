@@ -5,12 +5,15 @@ import ax from './api/RemoteServier'
 import Requests from "./api/Requests";
 import {prepareHtmlRequestMsg} from "../scripts/Registration";
 import {useNavigate} from "react-router";
+import useToken from "./hooks/useToken";
+import {Link} from "react-router-dom";
 
 /*https://stackoverflow.com/questions/69294536/where-to-store-jwt-token-in-react-client-side-in-secure-way
 
 * https://medium.com/@sannanmalikofficial/how-to-secure-jwt-token-in-react-2dbc23a514a6
 * */
 const Login = () => {
+    const [token, setToken] = useToken();
     const navigate = useNavigate();
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
@@ -23,15 +26,11 @@ const Login = () => {
     async function login(e) {
         e.preventDefault()
         try {
-            // const data = await Requests.login({email: loginData.email, password: loginData.password});
-            // console.log(data)
-            // console.log("Login is successfully!")
-            /*
-            *
-            * Сохранение token-а
-            *
-            * */
-            navigate("/main-window/")
+            const token = await Requests.login({email: loginData.email, password: loginData.password});
+            setToken(token)
+            console.log(token)
+            console.log("Login is successfully!")
+            navigate("/main-window/questions/your")
         } catch (err) {
             setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
         }
@@ -79,9 +78,9 @@ const Login = () => {
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"
                         onClick={login}>LOG IN
                 </button>
-                <p className="para-pmft mt-2">Don't have account? <a href="/registration"
-                                                                     className="color-text-type font-weight-600">Sing
-                    Up</a></p>
+                <p className="para-pmft mt-2">Don't have account? <Link to="/registration"
+                                                                        className="color-text-type font-weight-600">Sing
+                    Up</Link></p>
             </div>
         </div>
     </div>);

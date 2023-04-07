@@ -8,7 +8,7 @@ const AnswerQuest = () => {
 
     return (
         <div>
-
+            Ansower the questin
         </div>
     );
 };

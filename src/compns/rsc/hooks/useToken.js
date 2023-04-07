@@ -3,7 +3,10 @@ import React, {useState} from 'react'
 
 const useToken = () => {
     const getToken = () => {
-        const tokenString = localStorage.getItem('token')
+        let tokenString = localStorage.getItem('token')
+        if (tokenString === 'undefined') {
+            tokenString = null
+        }
         return JSON.parse(tokenString)
     }
 
@@ -16,11 +19,11 @@ const useToken = () => {
     const clearToken = () => {
         localStorage.removeItem('token')
     }
-    return {
-        setToken: saveToken,
-        clearToken: clearToken,
-        token
-    }
+    return [
+        token,
+        saveToken,
+        clearToken,
+    ];
 }
 
-export default useToken
+export default useToken;
