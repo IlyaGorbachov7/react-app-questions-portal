@@ -4,6 +4,9 @@ export function prepareHtmlMsgErrorNoMatchesPassword() {
     return <span>Confirm password don't matches your password.</span>;
 }
 
+export function prepareHtmlMsgErrorTokenTimeExpired(){
+    return <span>The life of the token has expired. Please log in again.</span>;
+}
 /**
  * email: "Value this field  should be email\nExample of valid email id\n    mysite@ourearth.com</i>\n    my.ownsite@ourearth.org</i>\n    mysite@you.me.net</i>"
  * <p>

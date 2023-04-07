@@ -37,6 +37,9 @@ const Login = () => {
     }
 
     useEffect(function () {
+        if(token !== null){
+            navigate("/main-window/questions/your")
+        }
     }, [])
 
     return (<div>
@@ -72,7 +75,7 @@ const Login = () => {
                         /> Remember me</label>
                     </div>
                     <div className="col color-text-type text-end font-weight-600">
-                        <Link to="/forget">Forget your password?</Link>
+                        <Link to="/forget-password">Forget your password?</Link>
                     </div>
                 </div>
                 <button className="btn btn-primary btn-lg block-size mt-lg-2" type="button"

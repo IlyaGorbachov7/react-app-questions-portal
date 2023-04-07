@@ -1,5 +1,6 @@
 import ax from "./RemoteServier";
 import useToken from "../hooks/useToken";
+import axios from "axios";
 
 export default class Requests {
     static getToken = () => {
@@ -32,6 +33,16 @@ export default class Requests {
 
     static async changePassword(changeData) {
         const response = await ax.post("/users/change-password", changeData)
+        return response.data;
+    }
+
+    static async delete(deleteData) {
+        const response = await ax.delete("/users/cur-user", {
+            data : deleteData,
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
         return response.data;
     }
 

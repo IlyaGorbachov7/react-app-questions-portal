@@ -27,7 +27,6 @@ const ChangePassword = () => {
     async function changePassword(e) {
         e.preventDefault();
         try {
-            debugger
             const data = await Requests.changePassword(changeData);
             console.log(data)
             setVisibleAction({

@@ -1,10 +1,4 @@
 
-/**
- * DeleteProfile component
- */
-export function deleteProfile(e) {
-
-}
 
 /**
  * EditProfile component
