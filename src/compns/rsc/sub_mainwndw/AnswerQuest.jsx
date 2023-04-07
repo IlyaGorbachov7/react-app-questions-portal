@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {startSterilizationBtnActive} from "../../scripts/MainWindow";
+import {UserContext} from "../context";
 
 const AnswerQuest = () => {
+    const {userSession, setUserSession} = useContext(UserContext);
     useEffect(() => {
         startSterilizationBtnActive("/questions/answer")
     }, [])
@@ -9,6 +11,7 @@ const AnswerQuest = () => {
     return (
         <div>
             Ansower the questin
+
         </div>
     );
 };

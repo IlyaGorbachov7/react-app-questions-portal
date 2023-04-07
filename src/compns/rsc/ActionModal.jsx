@@ -6,8 +6,8 @@ const ActionModal = ({children, visibleAction, setVisibleAction}) => {
         <>
             <Modal
                 show={visibleAction.visible} onHide={() => setVisibleAction({...visibleAction, visible: false})}
-                backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
+                backdrop="static" keyboard={false} >
+                <Modal.Header>
                     <Modal.Title>Successfully!</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
