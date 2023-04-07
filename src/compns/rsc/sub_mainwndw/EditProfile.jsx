@@ -50,7 +50,9 @@ const EditProfile = () => {
             debugger
             const data = await Requests.updateCurUser(editData);
             console.log(data)
-            setToken(data.token)
+            if(data.token !== null){ // back возвращает null, если email или password не были изменины!
+                setToken(data.token)
+            }
             setVisibleError({htmlE: prepareHtmlRequestMsg({message: data.message}), visible: true})
             getCurUser(); // эта фаункция определена в MainWindow, она сделает запрос на back и обнавит userSession
         } catch (err) {
