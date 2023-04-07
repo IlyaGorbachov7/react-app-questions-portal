@@ -7,6 +7,7 @@ import MainWindow from "./compns/rsc/MainWindow";
 import {BrowserRouter} from "react-router-dom";
 import {Navigate, Route, Routes} from "react-router";
 import ErrorPage from "./compns/rsc/Error";
+import ChangePassword from "./compns/rsc/ChangePassword";
 
 function App() {
     return (
@@ -15,7 +16,8 @@ function App() {
                 <Route path='/' element={<Login/>}/>
                 <Route path='/register' element={<Registration/>}/>
                 <Route path='/login' element={<Login/>}/>
-                <Route path='/forget' element={<ForgetPassword/>}/>
+                <Route path='/forget-password' element={<ForgetPassword/>}/>
+                <Route path='/change-password' element={<ChangePassword/>}/>
                 <Route path='/main-window/*' element={<MainWindow/>}/>
                 <Route path='/error-page' element={<ErrorPage/>}/>
                 <Route path='*' element={<Navigate to='/error-page'/>}/>

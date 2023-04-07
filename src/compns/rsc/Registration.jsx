@@ -6,8 +6,10 @@ import Requests from "./api/Requests";
 import {prepareHtmlMsgErrorNoMatchesPassword, prepareHtmlRequestMsg} from "../scripts/Registration";
 import ActionModal from "./ActionModal";
 import {Link} from "react-router-dom";
+import {useNavigate} from "react-router";
 
 const Registration = () => {
+    const navigate = useNavigate()
     const [regisData, setRegisData] = useState({
         email: "",
         password: "",
@@ -43,7 +45,7 @@ const Registration = () => {
                 msgAction: prepareHtmlRequestMsg(data),
                 callbackAction: (e) => {
                     e.preventDefault()
-                    console.log("navigate to /login page")
+                    navigate('/login')
                 }
             })
         } catch (err) {
@@ -114,7 +116,7 @@ const Registration = () => {
                             onClick={register}>SIGN UP
                     </button>
                     <p className="para-pmft mt-2">Already have account account? <Link to="/login"
-                                                                                   className="color-text-type font-weight-600">Log
+                                                                                      className="color-text-type font-weight-600">Log
                         in</Link></p>
                 </div>
             </div>
