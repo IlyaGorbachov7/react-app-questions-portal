@@ -17,7 +17,7 @@ export default class Requests {
 
 
     static async registration(registrationData) {
-        const response = await ax.post("/api/v1/users/register", registrationData, {
+        const response = await ax.post("/users/register", registrationData, {
             withCredentials: false
         });
         return response.data;

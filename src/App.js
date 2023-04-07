@@ -10,21 +10,22 @@ import AnswerQuest from "./compns/rsc/sub_mainwndw/AnswerQuest";
 import EditProfile from "./compns/rsc/sub_mainwndw/EditProfile";
 import ErrorModal from "./compns/rsc/ErrrorModal";
 import {useState} from "react";
+import {BrowserRouter} from "react-router-dom";
+import {Route, Routes} from "react-router";
+import ErrorPage from "./compns/rsc/Error";
 
 function App() {
     return (
-        <div>
-            {/*<Login/>*/}
-            {/*<ErrorModal visible={modal} setVisible={setModal}/>*/}
-            <Registration/>
-            {/*<ForgetPassword/>*/}
-            {/*<MainWindow/>*/}
-            {/*<DeleteProfile/>*/}
-            {/*<Registration/>*/}
-            {/*<YourQuest/>*/}
-            {/*<AnswerQuest/>*/}
-            {/*<EditProfile/>*/}
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path='/' element={<Login/>}/>
+                <Route path='/register' element={<Registration/>}/>
+                <Route path='/login' element={<Login/>}/>
+                <Route path='/forget' element={<ForgetPassword/>}/>
+                <Route path='/main-window/*' element={<MainWindow/>}/>
+                <Route path='*' element={<ErrorPage/>}/>
+            </Routes>
+        </BrowserRouter>
     );
 }
 

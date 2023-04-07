@@ -15,14 +15,10 @@ export const btnUserNameMainWindowId = "btnUserNameMainWindowId"
 
 export function startSterilizationBtnActive(urlStr) {
     function initArrayBtnOnBarActonPanel() {
-        debugger
         let arrBtnId = [btnYourQuestMainWindowId, btnAnswerQuestMainWindowId, btnUserNameMainWindowId];
-        debugger
         return arrBtnId.map(btnId => {
             const btn = document.getElementById(btnId);
-            debugger
             console.log(btn)
-            debugger
             return btn;
         })
     }
@@ -42,9 +38,7 @@ export function startSterilizationBtnActive(urlStr) {
     console.log(urlStr)
     let color = "dodgerblue";
     let arrBtnActions = initArrayBtnOnBarActonPanel();
-    debugger
     let curActionBtn = getBtnCurrentAction(arrBtnActions, urlStr)
-    debugger
     curActionBtn.style.color = color;
     arrBtnActions = arrBtnActions.filter(btnA => btnA !== curActionBtn) // удалю из массива кнопку текущей активности
     arrBtnActions.forEach(btnA => btnA.style.color = "black") // у хотябы у одного меняю цвет с синяго на белый
