@@ -10,11 +10,6 @@ export default class Requests {
         }
         return JSON.parse(tokenString)
     }
-    static config = {
-        headers: {
-            Authorization: "Bearer " + this.getToken()
-        }
-    }
 
     static async registration(registrationData) {
         const response = await ax.post("/users/register", registrationData);
@@ -38,7 +33,16 @@ export default class Requests {
 
     static async delete(deleteData) {
         const response = await ax.delete("/users/cur-user", {
-            data : deleteData,
+            data: deleteData,
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async updateCurUser(updateData) {
+        const response = await ax.put("/users/cur-user", updateData, {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
@@ -47,7 +51,11 @@ export default class Requests {
     }
 
     static async curUser() {
-        const response = await ax.get("/users/cur-user", this.config)
+        const response = await ax.get("/users/cur-user", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
         return response.data;
     }
 }
