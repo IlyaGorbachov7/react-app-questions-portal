@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
     startSterilizationBtnActive
 } from "../../scripts/MainWindow";
 import {Button} from "react-bootstrap";
 import {rangeViewHtml} from "../../scripts/sub_mainwndw/YourQuest";
 import {PaginationController} from "./sub_questcmp/PaginationController";
+import TablePaginationDemo from "./sub_questcmp/TableParinationDemo";
 
 const YourQuest = () => {
 
@@ -12,7 +13,7 @@ const YourQuest = () => {
         startSterilizationBtnActive("/questions/your")
     }, [])
     const [questions, setQuestions] = useState([])
-    const [curPage, setCurPage] = useState(1)
+    const [curPage, setCurPage] = useState(0)
     const [totalCountRecord, setTotalCountRecord] = useState(0) // пришло из сервера
     const [viewLimitCount, setViewLimitCount] = useState(5) // хочет видить пользователь
     const [printRange, setPrintRange] = useState([])
@@ -105,10 +106,8 @@ const YourQuest = () => {
                     }
                 </div>
                 <div className="align-items-center">
-                    <PaginationController page={curPage} setPage={setCurPage}
-                                          totalRecord={totalCountRecord}
-                                          limitRecordView={viewLimitCount}
-                    />
+                    <TablePaginationDemo page={curPage} setPage={setCurPage} rowsPerPage={viewLimitCount}
+                                         setRowsPerPage={setViewLimitCount} totalRecords={totalCountRecord}/>
                 </div>
                 <dir className="ms-auto align-items-center mt-sm-1">
                     <select className="form-select-sm form-select" defaultValue="5" onChange={(e) => {
@@ -124,7 +123,7 @@ const YourQuest = () => {
                         <option value="15">15</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
-                        <option value="ALL">ALL</option>
+                        <option value="-1">ALL</option>
                     </select>
                 </dir>
             </div>
