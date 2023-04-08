@@ -69,6 +69,7 @@ const MainWindow = () => {
             userSession: userData,
             setUserSession: setUserData,
             isLoaded,
+            getCurUser:getCurUser
         }}>
             {
                 (token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,
