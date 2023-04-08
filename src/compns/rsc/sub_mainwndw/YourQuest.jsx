@@ -1,24 +1,54 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState} from 'react';
 import {
     startSterilizationBtnActive
 } from "../../scripts/MainWindow";
-import {UserContext} from "../context";
 import {Button} from "react-bootstrap";
-import Pagination from "./sub_questcmp/Pagination";
+import {rangeViewHtml} from "../../scripts/sub_mainwndw/YourQuest";
+import {PaginationController} from "./sub_questcmp/PaginationController";
 
 const YourQuest = () => {
 
-    const {userSession, setUserSession} = useContext(UserContext);
     useEffect(() => {
         startSterilizationBtnActive("/questions/your")
     }, [])
-    const [curNumberPage, setCurNumberPage] = useState(1)
-    const [totalCount, setTotalCount] = useState(6) // пришло из сервера
-    const [viewLimitCount, setViewLimitCount] = useState(1) // хочет видить пользователь
+    const [questions, setQuestions] = useState([])
+    const [curPage, setCurPage] = useState(1)
+    const [totalCountRecord, setTotalCountRecord] = useState(0) // пришло из сервера
+    const [viewLimitCount, setViewLimitCount] = useState(5) // хочет видить пользователь
+    const [printRange, setPrintRange] = useState([])
 
-    function onPageChanged(data) {
-        const {currentPage, totalPages, pageLimit} = data;
-        console.log(data)
+    useEffect(() => {
+        getCountYourQuestions().then(totalCount => {
+            setTotalCountRecord(totalCount)
+            setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCount / viewLimitCount)))
+        })
+    }, [viewLimitCount, curPage, totalCountRecord])
+
+    useEffect(() => {
+        loadYourQuestion().then(quest => {
+            setQuestions(quest)
+        })
+    }, [totalCountRecord, viewLimitCount, curPage])
+
+    async function getCountYourQuestions() {
+        try {
+            console.log("Запрос на КОЛИЧЕСТВО вопросов ")
+            // const count = await Requests.getTotalCountYourQuest();
+            return 1243
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function loadYourQuestion() {
+        if (viewLimitCount === -1) {
+            console.log("Запрос на получения ВСЕХ вопросов ")
+            // return await Requests.getAllYourQuestions();
+        } else {
+            console.log("Запрос на получения СТРОАНЦУ вопросов " + curPage + " " + viewLimitCount)
+            // return await Requests.getYourQuestionsPage(curPage, viewLimitCount)
+        }
+
     }
 
     return (
@@ -68,10 +98,35 @@ const YourQuest = () => {
             </table>
 
             <div className="d-flex flex-row p-2 justify-content-center">
-                <div>
-                    <Pagination totalRecords={totalCount} pageLimit={viewLimitCount} pageNeighbours={curNumberPage}
-                                onPageChanged={onPageChanged}/>
+                <div className="me-auto mt-2 align-items-center">
+                    {
+                        (viewLimitCount !== -1) ? <span>{printRange[0]} - {printRange[1]} of {totalCountRecord}</span>
+                            : <span/>
+                    }
                 </div>
+                <div className="align-items-center">
+                    <PaginationController page={curPage} setPage={setCurPage}
+                                          totalRecord={totalCountRecord}
+                                          limitRecordView={viewLimitCount}
+                    />
+                </div>
+                <dir className="ms-auto align-items-center mt-sm-1">
+                    <select className="form-select-sm form-select" defaultValue="5" onChange={(e) => {
+                        debugger
+                        if (e.target.value === "ALL") {
+                            setViewLimitCount(-1)
+                        } else {
+                            setViewLimitCount(parseInt(e.target.value))
+                        }
+                    }}>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="ALL">ALL</option>
+                    </select>
+                </dir>
             </div>
         </div>
     );

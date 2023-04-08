@@ -58,4 +58,56 @@ export default class Requests {
         })
         return response.data;
     }
+
+//------------------------------------------------------------------------------------------
+
+    static async getTotalCountYourQuest() {
+        const response = await ax.get("/questions/from-me/count", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async getTotalCountAnswerQuest() {
+        const response = await ax.get("/questions/for-me/count", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async getAllYourQuestions() {
+        const response = await ax.get("/questions/from-me", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async getYourQuestionsPage(page, limit) {
+        const response = await ax.get("/questions/from-me", {
+            params: {
+                page: page,
+                limit: limit
+            },
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+
+    static async getAllAnswerQuestions() {
+        const response = await ax.get("/questions/for-me", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
 }
