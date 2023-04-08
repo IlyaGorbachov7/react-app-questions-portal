@@ -110,4 +110,14 @@ export default class Requests {
         })
         return response.data;
     }
+
+    static async deleteQuestion(id) {
+        const response = await ax.delete("/questions/from-me/", {
+            data: id,
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
 }
