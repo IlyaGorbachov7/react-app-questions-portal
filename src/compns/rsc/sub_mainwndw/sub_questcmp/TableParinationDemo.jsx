@@ -11,8 +11,9 @@ export default function TablePaginationDemo({page, setPage, rowsPerPage, setRows
     };
 
     const handleChangeRowsPerPage = (event) => {
+        debugger
         setRowsPerPage(parseInt(event.target.value, 10));
-        // setPage(0);
+        setPage(0);
     };
 
     return (
