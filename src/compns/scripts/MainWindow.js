@@ -1,11 +1,4 @@
 /**
- * Здесь нужно в зависимости от кномпи ПЕРЕНАПРАВИТЬ на другой компанент
- */
-export const btnGroupClick = (e) => {
-
-}
-
-/**
  * Изменяет цвет кнопак на панели.
  * Делает визулаьно ее активной, когда открвается (нажимеается) какая либо кнопка.
  */
@@ -17,9 +10,7 @@ export function startSterilizationBtnActive(urlStr) {
     function initArrayBtnOnBarActonPanel() {
         let arrBtnId = [btnYourQuestMainWindowId, btnAnswerQuestMainWindowId, btnUserNameMainWindowId];
         return arrBtnId.map(btnId => {
-            const btn = document.getElementById(btnId);
-            console.log(btn)
-            return btn;
+            return document.getElementById(btnId);
         })
     }
 
@@ -42,4 +33,19 @@ export function startSterilizationBtnActive(urlStr) {
     curActionBtn.style.color = color;
     arrBtnActions = arrBtnActions.filter(btnA => btnA !== curActionBtn) // удалю из массива кнопку текущей активности
     arrBtnActions.forEach(btnA => btnA.style.color = "black") // у хотябы у одного меняю цвет с синяго на белый
+}
+
+
+
+export function defineTotalCountPage(totalCount, limit) {
+    return Math.ceil(totalCount / limit)
+}
+export const arrayRange = (start, stop, step) =>
+    Array.from(
+        {length: (stop - start) / step + 1},
+        (value, index) => start + index * step
+    );
+export function getNumberPagesArray(total) {
+    //https://www.freecodecamp.org/news/javascript-range-create-an-array-of-numbers-with-the-from-method/
+    return arrayRange(1, total, 1)
 }
