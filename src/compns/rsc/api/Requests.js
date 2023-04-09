@@ -59,6 +59,35 @@ export default class Requests {
         return response.data;
     }
 
+    static async receiveEmails() {
+        const response = await ax.get("/users/emails", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+// -----------------------------------------------------------------------------------------
+    static async receiveAllAnswerTypes() {
+        const response = await ax.get("/answer-types/", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async getAnswerTypeById(id) {
+        const response = await ax.get("/answer-types/" + id, {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+
 //------------------------------------------------------------------------------------------
 
     static async getTotalCountYourQuest() {
