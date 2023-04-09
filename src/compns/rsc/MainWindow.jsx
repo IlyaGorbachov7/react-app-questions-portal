@@ -69,7 +69,7 @@ const MainWindow = () => {
             userSession: userData,
             setUserSession: setUserData,
             isLoaded,
-            getCurUser:getCurUser
+            getCurUser: getCurUser
         }}>
             {
                 (token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,
@@ -77,7 +77,8 @@ const MainWindow = () => {
                         (isLoaded)
                             ?
                             <div className="container mt-2">
-                                <div className="d-flex p-1 block-shadow-color main-bar-border-radius">
+                                <div className="d-flex p-1 block-shadow-color main-bar-border-radius"
+                                     style={{minWidth: "720px"}}>
                                     <div className="me-lg-auto font-weight-600 font-bar-size">
                                         <span className="color-text-logo">LOGO</span><span
                                         className="color-text-type">TYPE</span>

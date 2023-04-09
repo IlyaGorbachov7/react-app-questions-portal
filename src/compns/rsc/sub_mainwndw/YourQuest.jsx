@@ -261,12 +261,16 @@ const YourQuest = () => {
         console.log(quest)
     }
 
+    function addYourQuestion(){
+
+    }
+
     return (
-        <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius">
+        <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius" style={{minWidth:"720px"}}>
             <div className="d-flex flex-row p-2">
                 <h5 className="align-items-center mt-1">Your questions</h5>
                 <div className="ms-auto">
-                    <Button>
+                    <Button onClick={addYourQuestion}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              className="bi bi-plus" viewBox="0 0 16 16">
                             <path
@@ -279,10 +283,10 @@ const YourQuest = () => {
             <table className="table table-hover table-bordered table-striped block-border-radius">
                 <thead>
                 <tr>
-                    <th scope="col" style={{width: "350px"}} className="col-md-2">For user</th>
-                    <th scope="col" style={{width: "400px"}}>Question</th>
-                    <th scope="col" style={{width: "100px"}}>Answer type</th>
-                    <th scope="col" style={{width: "300px"}}>Answer</th>
+                    <th scope="col" style={{width: "35%"}} className="col-md-2">For user</th>
+                    <th scope="col" style={{width: "40%"}}>Question</th>
+                    <th scope="col" style={{width: "10%"}}>Answer type</th>
+                    <th scope="col" style={{width: "30%"}}>Answer</th>
                 </tr>
                 </thead>
                 <tbody>
