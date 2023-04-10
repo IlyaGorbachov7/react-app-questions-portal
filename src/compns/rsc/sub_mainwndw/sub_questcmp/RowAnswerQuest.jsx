@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RowAnswerQuest = ({q, giveAnswerCallback, ...props}) => {
+const RowAnswerQuest = ({q, giveAnswerCallback}) => {
 
     function giveAnswer(e) {
         e.preventDefault()
@@ -8,7 +8,7 @@ const RowAnswerQuest = ({q, giveAnswerCallback, ...props}) => {
     }
 
     return (
-        <tr {...props}>
+        <tr>
             <td scope="row">{q.fromUser}</td>
             <td>{q.question}</td>
             {/*<td>{q.answerType}</td>*/}
