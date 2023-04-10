@@ -11,7 +11,7 @@ export const ANSWER_TYPES = [
     /*5*/ 'Check box']
 
 export const splitOptionStringToListOptions = (optionsStr) => {
-    debugger
+    
     let d = optionsStr.split('\n');
     return d;
 }
@@ -35,7 +35,6 @@ export const splitOptionStringToListOptions = (optionsStr) => {
 //     }
 // }
 export const generateHtmlOptions = (nameAnswerType, dataRetriever, setDataRetriever) => {
-    debugger
     if (ANSWER_TYPES[0] === nameAnswerType) { // Single line text
         return (<input type={"text"} value={dataRetriever.answerText}
                        onChange={(e) => {
@@ -55,15 +54,11 @@ export const generateHtmlOptions = (nameAnswerType, dataRetriever, setDataRetrie
             {dataRetriever.options
                 .map((txOption, index) => {
                     return (
-                        // <div key={index}>
-                        //     <input type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
-                        //     <span>{checked ? 'галочка есть' : 'галочки нет'}</span>
-                        // </div>
                         <div key={index}>
                             <br/>
                             <label><input type="radio" key={index} name="radio"
                                           value={txOption}
-                                          checked={(dataRetriever.answerText == txOption)} //  '==' только так работает
+                                          checked={dataRetriever.answerText == txOption ? true :false} //  '==' только так работает
                                           onChange={(e) => {
                                               setDataRetriever({...dataRetriever, answerText: e.target.value})
                                           }}></input>
@@ -74,7 +69,19 @@ export const generateHtmlOptions = (nameAnswerType, dataRetriever, setDataRetrie
             ;
         </div>)
     } else if (ANSWER_TYPES[4] === nameAnswerType) { // Combo box
-        return <></> // сделать !
+        return <dir className="ms-auto align-items-center mt-sm-1">
+            <select className="form-select form-select"
+                    onChange={(e) => {
+                
+                setDataRetriever({...dataRetriever, answerText: e.target.value})
+            }}> {
+                dataRetriever.options.map((txOption, index) => {
+                    return (<option key={index} value={txOption}
+                                    selected={dataRetriever.answerText == txOption}>{txOption}</option>)
+                })
+            }
+            </select>
+        </dir> // сделать !
     } else if (ANSWER_TYPES[5] === nameAnswerType) { // Check box
         return (<div className="form-check">
             {
@@ -85,7 +92,7 @@ export const generateHtmlOptions = (nameAnswerType, dataRetriever, setDataRetrie
                                checked={dataRetriever.answerText.find((e) => e == txOption) != undefined} // '!=' ' только так работает
                                id="flexCheckDefault"
                                onChange={(e) => {
-                                   debugger
+                                   
                                    console.log(e)
                                    const checkBox = e.target;
                                    if (checkBox.checked == true) {
@@ -120,9 +127,9 @@ export const prepareAnswerText = (nameAnswerType, dataRetriever) => {
     } else if (ANSWER_TYPES[2] === nameAnswerType) { // Date
         return dataRetriever.answerText;
     } else if (ANSWER_TYPES[3] === nameAnswerType) { // Radio button
-        return dataRetriever.answerText.join('\n')
+        return dataRetriever.answerText
     } else if (ANSWER_TYPES[4] === nameAnswerType) { // Combo box
-        return dataRetriever.answerText.join('\n')
+        return dataRetriever.answerText
     } else if (ANSWER_TYPES[5] === nameAnswerType) { // Check box
         return dataRetriever.answerText.join('\n')
     }
