@@ -1,24 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal} from "react-bootstrap";
 import DatePicker from "react-date-picker";
-import {ANSWER_TYPES} from "../../../scripts/sub_mainwndw/AnswerQuest";
+import {generateHtmlOptions} from "../../../scripts/sub_mainwndw/AnswerQuest";
 
 
-const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, emails, answerTypes}) => {
-    useEffect(() => {
-        emails = emails.sort();
-        answerTypes = answerTypes.sort((at, at1) => {
-            return (at.id < at1.id) ? -1 : (at.id > at1.id) ? 1 : 0
-        })
-    })
+const AnswerPanelQuestion = ({children, visibleAnswerTheQuest, setVisibleAnswerTheQuest}) => {
     const [newQuest, setNewQuest] = useState({
         forUser: emails.length !== 0 ? emails[0] : "",
         question: "",
         nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
-        options: ""
+        options: []
     });
 
-    async function saveHandler(e) {
+    async function submitAnswerOnTheQuestion(e) {
         e.preventDefault()
         visibleAddQuest.callbackAction(newQuest)
     }
@@ -73,32 +67,27 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                             })}
                         </select></td>
                     </tr>
-                    {
-                        // решаем вопрос будим ли мы отображать options для нового вопроса
-                        (newQuest.nameType === ANSWER_TYPES[3] || newQuest.nameType === ANSWER_TYPES[4] || newQuest.nameType === ANSWER_TYPES[5])
-                            ?
-                            < tr>
-                                < td> Options< /td>
-                                <td>
-                                    <textarea className="form-control" value={newQuest.options}
-                                              onChange={(e) => setNewQuest({...newQuest, options: e.target.value})}/>
-                                </td>
-                            </tr>
-                            : <></>
-                    }
+                    <tr>
+                        <td>Options</td>
+                        <td>
+                            {
+                                generateHtmlOptions()
+                            }
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={(e) => {
-                    setVisibleAddQuest({...visibleAddQuest, visible: false})
+                    setVisibleAnswerTheQuest({...visibleAnswerTheQuest, visible: false})
                 }}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={saveHandler}>Save</Button>
+                <Button variant="primary" onClick={submitAnswerOnTheQuestion}>Submit</Button>
             </Modal.Footer>
         </Modal>
     );
 };
 
-export default AddPanelYourQuestion;
+export default AnswerPanelQuestion;

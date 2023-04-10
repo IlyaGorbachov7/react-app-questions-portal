@@ -149,4 +149,8 @@ export default class Requests {
         })
         return response.data;
     }
+
+    static async updateQuestion(updateQuest){
+
+    }
 }

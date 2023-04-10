@@ -9,6 +9,7 @@ import {Button} from "react-bootstrap";
 import RowQuestions from "./sub_questcmp/RowQuestions";
 import TablePaginationDemo from "./sub_questcmp/TableParinationDemo";
 import RowAnswerQuest from "./sub_questcmp/RowAnswerQuest";
+import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 
 const AnswerQuest = () => {
     let quests = [
@@ -18,7 +19,7 @@ const AnswerQuest = () => {
             question: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: " slkfjdslf232323",
-            
+
         },
         {
             id: "sldkfj lsdjgggflk jsdlf",
@@ -197,9 +198,15 @@ const AnswerQuest = () => {
     ]
 
     const stoperLoop = useRef('')
-    const [visibleAddQuest, setVisibleAddQuest] = useState({
+    const [visibleAnswerTheQuest, setVisibleAnswerTheQuest] = useState({
         visible: false,
-        callbackAction: (newQuest) => {
+        clickedQuest: {
+            fromUser: "",
+            question: "",
+            answerText: "", // это сам ответ от пользователя
+            nameType: "" // это тип вопроса!!
+        },
+        callbackAction: (answeredQuest) => {
         }
     })
     useEffect(() => {
@@ -256,14 +263,48 @@ const AnswerQuest = () => {
 
     //------------------------------------------------------------------------------------------------------------------
 
+    const handlerClickOnTheRowAnswerTheQuest = (clickedQuestion // этот вопрос из списка, сформированЫЙ ИЗ СЕРВЕРА!!!!
+    ) => {
+        e.preventDefault()
+        setVisibleAnswerTheQuest({
+            visible: true,
+            clickedQuest: {
+                fromUser: clickedQuestion.fromUser,
+                question: clickedQuestion.question,
+                answerText: clickedQuestion.answerText, //  это содержимое вопроса
+                nameType: clickedQuestion.answerType // ВНИМАНИЕ ЗДЕСЬ nameType  === ~~ === answerType // это тип вопроса, как визуально отобразить
+            },
+            // У нас здесь обработка !!!!!
+            callbackAction: (answeredQuest) => {
+                // делаем запрос в сервер, что на вопрос мы ответили
+                Requests.updateQuestion(answeredQuest).then(res => {
+
+                    // обнаялем список делая запрос в базу данных
+                    loadCountAnswerQuestions().then(count => { // получаем из базы данных вопросы
+                        setTotalCountRecord(count)
+                        loadAnswerQuestions().then(qus => {
+                            setQuestions(qus)
+                            // можем закрывать  это ModelVie, вот таким образом
+                            setVisibleAnswerTheQuest({
+                                visible: false,
+                                clickedQuest: null,
+                                callbackAction: () => {
+                                }
+                            })
+                        })
+                    })
+                })
+            }
+        })
+    }
 
     return (
         <>
             { // This is  very important condition, because I want that this component reset your statement and
                 // again initialize your hooks. I rise that useState setting default value inside AddPanelYourQuestion!!
-                (visibleAddQuest.visible === true) ? <AddPanelYourQuestion visibleAddQuest={visibleAddQuest}
-                                                                           setVisibleAddQuest={setVisibleAddQuest}
-                                                                           emails={emails} answerTypes={answerTypes}/>
+                (visibleAnswerTheQuest.visible === true) ?
+                    <AnswerPanelQuestion visibleAnswerTheQuest={visibleAnswerTheQuest}
+                                         setVisibleAnswerTheQuest={setVisibleAnswerTheQuest}/>
                     : <></>
             }
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
@@ -284,7 +325,7 @@ const AnswerQuest = () => {
                     {questions.map(q => {
                         return (
                             <RowAnswerQuest key={q.id} q={q}
-                                          giveAnswerCallback={updateQuestion}/>
+                                            giveAnswerCallback={handlerClickOnTheRowAnswerTheQuest}/>
                         )
                     })}
                     </tbody>
