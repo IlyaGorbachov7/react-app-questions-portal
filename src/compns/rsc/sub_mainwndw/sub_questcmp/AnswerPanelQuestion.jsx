@@ -1,26 +1,55 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal} from "react-bootstrap";
 import DatePicker from "react-date-picker";
-import {generateHtmlOptions} from "../../../scripts/sub_mainwndw/AnswerQuest";
+import {
+    generateHtmlOptions,
+    prepareAnswerText,
+    splitOptionStringToListOptions
+} from "../../../scripts/sub_mainwndw/AnswerQuest";
+import {string} from "prop-types";
 
 
-const AnswerPanelQuestion = ({children, visibleAnswerTheQuest, setVisibleAnswerTheQuest}) => {
-    const [newQuest, setNewQuest] = useState({
-        forUser: emails.length !== 0 ? emails[0] : "",
-        question: "",
-        nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
-        options: []
+const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) => {
+    // Эти значения этих useState - являюется answer-- ответом пользователя!!, они далжны войти в answer !!
+    const [textArea, setTextArea] = useState('')
+
+    const [dateTime, setDateTime] = useState(new Date())
+
+    const [radioSelected, setRadioSelected] = useState('')
+
+    const [checkBoxSelected, setCheckBoxSelected] = useState([])
+
+    const [dataRetriever, setDataRetriever] = useState({
+        textArea: textArea,
+        setTextArea: setTextArea,
+
+        dateTime: dateTime,
+        setDateTime: setDateTime,
+
+        options: splitOptionStringToListOptions(visibleAnswerTheQuest.clickedQuest.answerText),
+
+        radioSelected: radioSelected,
+        setRadioSelected: setRadioSelected,
+
+        checkBoxSelected: checkBoxSelected,
+        setDataRetriever: setDataRetriever
+
     });
 
     async function submitAnswerOnTheQuestion(e) {
         e.preventDefault()
-        visibleAddQuest.callbackAction(newQuest)
+        let textAnswer = prepareAnswerText(visibleAnswerTheQuest.clickedQuest.nameType, dataRetriever)
+        setVisibleAnswerTheQuest({
+            ...visibleAnswerTheQuest,
+            clickedQuest: {...visibleAnswerTheQuest.clickedQuest, answerText: textAnswer}
+        })
+        visibleAnswerTheQuest.callbackAction({...visibleAnswerTheQuest.clickedQuest, answerText: textAnswer})
     }
 
     return (
         <Modal
-            show={visibleAddQuest.visible}
-            onHide={() => setVisibleAddQuest({...visibleAddQuest, visible: false})}
+            show={visibleAnswerTheQuest.visible}
+            onHide={() => setVisibleAnswerTheQuest({...visibleAnswerTheQuest, visible: false})}
             backdrop="static"
             keyboard={false}
         >
@@ -31,47 +60,28 @@ const AnswerPanelQuestion = ({children, visibleAnswerTheQuest, setVisibleAnswerT
                 <table className="table">
                     <tbody>
                     <tr>
-                        <td>For user</td>
-                        <td><select className="form-select"
-                                    onChange={(e) => {
-                                        setNewQuest({...newQuest, forUser: e.target.value})
-                                    }}>
-                            {emails.map((email) => {
-                                return (
-                                    <option key={email} value={email}>
-                                        {email}
-                                    </option>)
-                            })}
-                        </select></td>
+                        <td>From user</td>
+                        <td>
+                            <input type="text" className="form-control">
+                                {visibleAnswerTheQuest.clickedQuest.fromUser}
+                            </input>
+                        </td>
                     </tr>
                     <tr>
                         <td>Question</td>
                         <td>
-                            <input type="email" className="form-control"
-                                   placeholder="Input your question text"
-                                   value={newQuest.question}
-                                   onChange={(e) => setNewQuest({...newQuest, question: e.target.value})}/>
+                            <input type="text" className="form-control">
+                                {visibleAnswerTheQuest.clickedQuest.question}
+                            </input>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Answer type</td>
-                        <td><select className="form-select"
-                                    onChange={(e) => {
-                                        setNewQuest({...newQuest, nameType: e.target.value})
-                                    }}>
-                            {answerTypes.map((answerType) => {
-                                return (
-                                    <option key={answerType.id} value={answerType.nameType}>
-                                        {answerType.nameType}
-                                    </option>)
-                            })}
-                        </select></td>
-                    </tr>
+
                     <tr>
                         <td>Options</td>
                         <td>
                             {
-                                generateHtmlOptions()
+                                generateHtmlOptions(visibleAnswerTheQuest.clickedQuest.nameType,
+                                    dataRetriever, setDataRetriever)
                             }
                         </td>
                     </tr>
