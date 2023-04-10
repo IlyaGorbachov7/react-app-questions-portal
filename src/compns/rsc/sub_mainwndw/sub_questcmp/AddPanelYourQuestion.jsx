@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal} from "react-bootstrap";
+import DatePicker from "react-date-picker";
 
 
 const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, emails, answerTypes}) => {
@@ -12,7 +13,8 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
     const [newQuest, setNewQuest] = useState({
         forUser: emails.length !== 0 ? emails[0] : "",
         question: "",
-        nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : ""
+        nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
+        options: []
     });
 
     async function saveHandler(e) {
@@ -72,7 +74,9 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                     </tr>
                     <tr>
                         <td>Options</td>
-                        <td>Динамически изменятся должно</td>
+                        <td>
+
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -80,18 +84,13 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
             <Modal.Footer>
                 <Button variant="secondary" onClick={(e) => {
                     setVisibleAddQuest({...visibleAddQuest, visible: false})
-                    setNewQuest({
-                        forUser: "",
-                        question: "",
-                        nameType: ""
-                    })
                 }}>
                     Close
                 </Button>
                 <Button variant="primary" onClick={saveHandler}>Save</Button>
             </Modal.Footer>
         </Modal>
-    );
+);
 };
 
 export default AddPanelYourQuestion;
