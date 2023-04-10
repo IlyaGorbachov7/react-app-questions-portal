@@ -15,25 +15,7 @@ export const splitOptionStringToListOptions = (optionsStr) => {
     let d = optionsStr.split('\n');
     return d;
 }
-//
-// const dataRetriever = {
-//     textArea: "", setTextArea: (d) => {
-//
-//     }, dateTime: new Data(), setDateTime: (d) => {
-//
-//     },
-//
-//     options: [],
-//
-//     radioSelected: "Fist ELMEt ARRAY",
-//     setRadioSelected: (d) => {
-//     },
-//
-//     checkBoxSelected: [],
-//     setCheckBoxSelected: (d) => {
-//
-//     }
-// }
+
 export const generateHtmlOptions = (nameAnswerType, dataRetriever, setDataRetriever) => {
     if (ANSWER_TYPES[0] === nameAnswerType) { // Single line text
         return (<input type={"text"} value={dataRetriever.answerText}

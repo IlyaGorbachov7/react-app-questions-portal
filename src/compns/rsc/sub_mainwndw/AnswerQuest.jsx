@@ -80,7 +80,7 @@ const AnswerQuest = () => {
             question: "",
             answerText: "", // это сам ответ от пользователя
             nameType: "", // это тип вопроса!!
-            options: []
+            options: ""
         },
         callbackAction: (answeredQuest) => {
         }

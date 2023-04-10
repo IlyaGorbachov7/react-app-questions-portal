@@ -53,8 +53,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                     <tr>
                         <td>Question</td>
                         <td>
-                            <input type="email" className="form-control"
-                                   placeholder="Input your question text"
+                            <input type="text" className="form-control"
                                    value={newQuest.question}
                                    onChange={(e) => setNewQuest({...newQuest, question: e.target.value})}/>
                         </td>

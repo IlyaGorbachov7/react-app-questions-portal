@@ -6,6 +6,7 @@ import TablePaginationDemo from "./sub_questcmp/TableParinationDemo";
 import RowQuestions from "./sub_questcmp/RowQuestions";
 import Requests from "../api/Requests";
 import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
+import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
 
 const YourQuest = () => {
     const stoperLoop = useRef('')
@@ -13,6 +14,13 @@ const YourQuest = () => {
         visible: false,
         callbackAction: (newQuest) => {
         }
+    })
+    const [visibleUpdateQuest, setVisibleUpdateQuest] = useState({
+        visible: false,
+        questOnUpdate: {},
+        callbackAction: (updatedQuest) => {
+        }
+
     })
     useEffect(() => {
         startSterilizationBtnActive("/questions/your")
@@ -22,184 +30,76 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
             forUser: "11111sldkfje3ds@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            question: "Чемы бы ты хотел заниматся ?",
+            answerType: "Single line text",
+            answerText: " slkfjdslf232323",
+            options: null
         },
         {
             id: "sldkfj lsdjgggflk jsdlf",
             forUser: "22222sldkfjds@7gmail.com",
             question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerType: "Combo box",
+            answerText: "fff",
+            options: "hfp\nxtnhst\nxnj\nfff"
         },
         {
             id: "sldkfj lsdjfjhjflk jss",
             forUser: "33333sldkfjds@gma8il.com",
             question: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerText: " slkfjdslf232323",
+            options: "slkfjdslf232323\nYOur\nNo"
         },
         {
             id: "jsdlfk ghjghjjdslk fjs",
             forUser: "4444444sldkfsdf@gmail.0com",
             question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerType: "Single line text",
+            answerText: " slkfjdslf232323",
+            options: null
+
         },
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
             forUser: "5555555sklkldkfjds@gmail.co7m",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            question: "Your border ?",
+            answerType: "Date",
+            answerText: "2023-08-01",
+            options: null,
         },
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
             forUser: "666666666sldkfjdssd@gmail7.com",
             question: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerText: " slkfjdslf232323",
+            options: "332\n242\n999",
         },
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
             forUser: "77777777773mail.c4om",
             question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerType: " Multiline text",
+            answerText: "Что бы блять \n тваришь что же давай друг!!!",
+            options: null,
         },
         {
             id: "eyug8980fvd",
             forUser: "8888888888234ldkfjds@gmail.c0om",
             question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
+            answerType: "Date",
+            answerText: "",
+            options: null,
         },
         {
             id: "876865ff907089vdc",
             forUser: "99999999999924455dkfjds@gvmail.com",
             question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "jlkhgerpt4323666434",
-            forUser: "1001000043534654sldkfjdsc@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "t5dfsfgc66677777rgds",
-            forUser: "s4m,423 42 4fjds@zgmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "ertopjtrvkrej999fe",
-            forUser: "34325s@gmail.cohm",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "fdsf60000",
-            forUser: "4254fjds@gmail.jcom",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            forUser: "9999sldkfjds@gmnail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "sldkfj ljsdlfk jdslk fjs",
-            forUser: "66666sldkfjds@gm ail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "3eeeeeeeeeeee",
-            forUser: "56564sldkfjds@sgmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "fd9 fjewwwwwwwwqqqqqqqqqqs",
-            forUser: "3s75r587ldkfj,ds@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "lkkjg  wfwe   ",
-            forUser: "sldkfjds@gmaisl.com",
-            question: "Wlkjfsdlfkjdddddddddddddddddd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "sldkfj wfwefwefweferyhvdsdjflk 000000",
-            forUser: "4234sldkfjds@gmeail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "dddvcvdvrfrt",
-            forUser: "werefsldkfjds@gmaheil.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "grgf f rcgf",
-            forUser: "sldkfjds@gmail.dfcom",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "kkkdhgfhhr",
-            forUser: "dsfdsfsldkfjdsdfs@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "0000ercg erger cg 32rdc",
-            forUser: "sldkfjds@gmlail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "lkd jht hgfgl;   ",
-            forUser: "23423434sldkfjyods@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "dfldfkgjsl fghsgg rgkf    q223",
-            forUser: "sRRRRldyuikfjds@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
-        {
-            id: "11111111 fghbgfhscf vg11111",
-            forUser: "sl@@@@dkfjdyps@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323"
-        },
+            answerType: "Radio button",
+            answerText: "",
+            options: " 1\n2\n3",
+        }
     ]
 
     const [questions, setQuestions] = useState([])
@@ -301,15 +201,28 @@ const YourQuest = () => {
     }
 
     async function updateQuestion(quest) {
-        // await Requests.deleteQuestion(id)
         console.log("Запусаем оно для обнавленя для вопроса" + "и там проводим разнового рода операции")
-        console.log(quest)
+        setVisibleUpdateQuest({
+            visible: true,
+            questOnUpdate: {
+                id: quest.id,
+                forUser: quest.forUser,
+                question: quest.question,
+                answerText: quest.answerText,
+                nameType: quest.answerType, // обрати внимаение, что зесь поля отличаются
+                options: quest.options
+            },
+            callbackAction: (updatedQuest) => {
+                // request on the update quest
+            }
+        })
     }
 
     function addYourQuestion() {
         setVisibleAddQuest({
             visible: true,
             callbackAction: (newQuest) => {
+                // request on the save file
                 console.log(newQuest)
             }
         })
@@ -322,6 +235,13 @@ const YourQuest = () => {
                 (visibleAddQuest.visible === true) ? <AddPanelYourQuestion visibleAddQuest={visibleAddQuest}
                                                                            setVisibleAddQuest={setVisibleAddQuest}
                                                                            emails={emails} answerTypes={answerTypes}/>
+                    : <></>
+            }
+
+            {
+                (visibleUpdateQuest.visible === true) ? <EditPanelQuest visibleUpdateQuest={visibleUpdateQuest}
+                                                                        setVisibleUpdateQuest={setVisibleUpdateQuest}
+                                                                        emails={emails} answerTypes={answerTypes}/>
                     : <></>
             }
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
