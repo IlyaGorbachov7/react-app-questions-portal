@@ -14,7 +14,7 @@ const RowQuestions = ({q, deleteCallback, updateCallback, ...props}) => {
 
     return (
         <tr {...props}>
-            <td scope="row">{q.forUser}</td>
+            <td scope="row">{q.emailForUser}</td>
             <td>{q.questionText}</td>
             <td>{q.answerType}</td>
             <td>{q.answerText}</td>

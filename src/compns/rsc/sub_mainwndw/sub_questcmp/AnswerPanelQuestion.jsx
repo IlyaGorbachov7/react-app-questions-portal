@@ -74,7 +74,7 @@ const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) 
                             <td>From user</td>
                             <td>
                                 <div>
-                                    {visibleAnswerTheQuest.clickedQuest.fromUser}
+                                    {visibleAnswerTheQuest.clickedQuest.emailFromUser}
                                 </div>
                             </td>
                         </tr>

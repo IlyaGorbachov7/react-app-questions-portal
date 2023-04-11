@@ -29,7 +29,7 @@ const YourQuest = () => {
     let quests = [
         {
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
-            forUser: "11111sldkfje3ds@gmail.com",
+            emailForUser: "11111sldkfje3ds@gmail.com",
             questionText: "Чемы бы ты хотел заниматся ?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
@@ -37,7 +37,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjgggflk jsdlf",
-            forUser: "22222sldkfjds@7gmail.com",
+            emailForUser: "22222sldkfjds@7gmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
             answerText: "fff",
@@ -45,7 +45,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfjhjflk jss",
-            forUser: "33333sldkfjds@gma8il.com",
+            emailForUser: "33333sldkfjds@gma8il.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: " slkfjdslf232323",
@@ -53,7 +53,7 @@ const YourQuest = () => {
         },
         {
             id: "jsdlfk ghjghjjdslk fjs",
-            forUser: "4444444sldkfsdf@gmail.0com",
+            emailForUser: "4444444sldkfsdf@gmail.0com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
@@ -62,7 +62,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
-            forUser: "5555555sklkldkfjds@gmail.co7m",
+            emailForUser: "5555555sklkldkfjds@gmail.co7m",
             questionText: "Your border ?",
             answerType: "Date",
             answerText: "2023-08-01",
@@ -70,7 +70,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
-            forUser: "666666666sldkfjdssd@gmail7.com",
+            emailForUser: "666666666sldkfjdssd@gmail7.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: " slkfjdslf232323",
@@ -78,7 +78,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
-            forUser: "77777777773mail.c4om",
+            emailForUser: "77777777773mail.c4om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Multiline text",
             answerText: "Что бы блять \n тваришь что же давай друг!!!",
@@ -86,7 +86,7 @@ const YourQuest = () => {
         },
         {
             id: "eyug8980fvd",
-            forUser: "8888888888234ldkfjds@gmail.c0om",
+            emailForUser: "8888888888234ldkfjds@gmail.c0om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
             answerText: "",
@@ -94,7 +94,7 @@ const YourQuest = () => {
         },
         {
             id: "876865ff907089vdc",
-            forUser: "99999999999924455dkfjds@gvmail.com",
+            emailForUser: "99999999999924455dkfjds@gvmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
             answerText: "",
@@ -206,7 +206,7 @@ const YourQuest = () => {
             visible: true,
             questOnUpdate: {
                 id: quest.id,
-                forUser: quest.forUser,
+                emailForUser: quest.emailForUser,
                 questionText: quest.questionText,
                 answerText: quest.answerText,
                 nameType: quest.answerType, // обрати внимаение, что зесь поля отличаются

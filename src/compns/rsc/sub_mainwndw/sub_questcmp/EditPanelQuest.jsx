@@ -34,7 +34,7 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
                         <td>For user</td>
                         <td><select className="form-select"
                                     onChange={(e) => {
-                                        setEditQuest({...editQuest, forUser: e.target.value})
+                                        setEditQuest({...editQuest, emailForUser: e.target.value})
                                     }}>
                             {emails.map((email) => {
                                 return (

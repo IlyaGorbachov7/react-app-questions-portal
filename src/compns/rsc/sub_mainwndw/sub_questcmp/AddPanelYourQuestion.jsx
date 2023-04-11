@@ -12,7 +12,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
         })
     })
     const [newQuest, setNewQuest] = useState({
-        forUser: emails.length !== 0 ? emails[0] : "",
+        emailForUser: emails.length !== 0 ? emails[0] : "",
         questionText: "",
         nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
         options: ""
@@ -40,7 +40,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                         <td>For user</td>
                         <td><select className="form-select"
                                     onChange={(e) => {
-                                        setNewQuest({...newQuest, forUser: e.target.value})
+                                        setNewQuest({...newQuest, emailForUser: e.target.value})
                                     }}>
                             {emails.map((email) => {
                                 return (

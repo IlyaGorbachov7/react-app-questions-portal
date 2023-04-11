@@ -9,7 +9,7 @@ const RowAnswerQuest = ({q, giveAnswerCallback}) => {
 
     return (
         <tr>
-            <td scope="row">{q.fromUser}</td>
+            <td scope="row">{q.emailFromUser}</td>
             <td>{q.questionText}</td>
             {/*<td>{q.answerType}</td>*/}
             <td>{q.answerText}</td>
