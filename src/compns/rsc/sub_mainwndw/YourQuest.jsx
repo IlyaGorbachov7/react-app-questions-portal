@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {startSterilizationBtnActive} from "../../scripts/MainWindow";
 import {Button} from "react-bootstrap";
 import {rangeViewHtml} from "../../scripts/sub_mainwndw/YourQuest";
@@ -7,8 +7,10 @@ import RowQuestions from "./sub_questcmp/RowQuestions";
 import Requests from "../api/Requests";
 import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
 import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
+import {UserContext} from "../context";
 
 const YourQuest = () => {
+    const {userSession} = useContext(UserContext)
     const stoperLoop = useRef('')
     const [visibleAddQuest, setVisibleAddQuest] = useState({
         visible: false,
@@ -28,7 +30,9 @@ const YourQuest = () => {
 
     let quests = [
         {
+
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
+            emailFromUser:userSession.email,
             emailForUser: "11111sldkfje3ds@gmail.com",
             questionText: "Чемы бы ты хотел заниматся ?",
             answerType: "Single line text",
@@ -37,6 +41,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjgggflk jsdlf",
+            emailFromUser:userSession.email,
             emailForUser: "22222sldkfjds@7gmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
@@ -45,6 +50,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfjhjflk jss",
+            emailFromUser:userSession.email,
             emailForUser: "33333sldkfjds@gma8il.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
@@ -53,6 +59,7 @@ const YourQuest = () => {
         },
         {
             id: "jsdlfk ghjghjjdslk fjs",
+            emailFromUser:userSession.email,
             emailForUser: "4444444sldkfsdf@gmail.0com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
@@ -62,6 +69,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
+            emailFromUser:userSession.email,
             emailForUser: "5555555sklkldkfjds@gmail.co7m",
             questionText: "Your border ?",
             answerType: "Date",
@@ -70,6 +78,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
+            emailFromUser:userSession.email,
             emailForUser: "666666666sldkfjdssd@gmail7.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
@@ -78,6 +87,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
+            emailFromUser:userSession.email,
             emailForUser: "77777777773mail.c4om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Multiline text",
@@ -86,6 +96,7 @@ const YourQuest = () => {
         },
         {
             id: "eyug8980fvd",
+            emailFromUser:userSession.email,
             emailForUser: "8888888888234ldkfjds@gmail.c0om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
@@ -94,6 +105,7 @@ const YourQuest = () => {
         },
         {
             id: "876865ff907089vdc",
+            emailFromUser:userSession.email,
             emailForUser: "99999999999924455dkfjds@gvmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
@@ -206,10 +218,11 @@ const YourQuest = () => {
             visible: true,
             questOnUpdate: {
                 id: quest.id,
+                emailFromUser:quest.emailFromUser,
                 emailForUser: quest.emailForUser,
                 questionText: quest.questionText,
                 answerText: quest.answerText,
-                nameType: quest.answerType, // обрати внимаение, что зесь поля отличаются
+                answerType: quest.answerType,
                 options: quest.options
             },
             callbackAction: (updatedQuest) => {

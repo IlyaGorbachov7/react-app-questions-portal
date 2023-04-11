@@ -10,7 +10,8 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
             return (at.id < at1.id) ? -1 : (at.id > at1.id) ? 1 : 0
         })
     })
-    const [editQuest, setEditQuest] = useState(visibleUpdateQuest.questOnUpdate);
+    const [editQuest, setEditQuest] = useState({...visibleUpdateQuest.questOnUpdate,
+        answerText : ""}); // обязательно удаляем ОТВЕТ на этот проврос, если этот вопрос мы захотели изменить
 
     function handlerBtnUpdateQuest(e) {
         e.preventDefault()
@@ -55,11 +56,11 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
                     <tr>
                         <td>Answer type</td>
                         <td><select className="form-select" onChange={(e) => {
-                            setEditQuest({...editQuest, nameType: e.target.value})
+                            setEditQuest({...editQuest, answerType: e.target.value})
                         }}>
                             {answerTypes.map((answerType) => {
                                 return (
-                                    <option key={answerType.id} selected={editQuest.nameType == answerType.nameType}
+                                    <option key={answerType.id} selected={editQuest.answerType == answerType.nameType}
                                             value={answerType.nameType}>
                                         {answerType.nameType}
                                     </option>)
@@ -68,7 +69,7 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
                     </tr>
                     {
                         // решаем вопрос будим ли мы отображать options для нового вопроса
-                        (editQuest.nameType === ANSWER_TYPES[3] || editQuest.nameType === ANSWER_TYPES[4] || editQuest.nameType === ANSWER_TYPES[5])
+                        (editQuest.answerType === ANSWER_TYPES[3] || editQuest.answerType === ANSWER_TYPES[4] || editQuest.answerType === ANSWER_TYPES[5])
                             ?
                             < tr>
                                 < td> Options< /td>

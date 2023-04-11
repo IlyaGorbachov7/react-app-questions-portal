@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Modal} from "react-bootstrap";
-import DatePicker from "react-date-picker";
 import {ANSWER_TYPES} from "../../../scripts/sub_mainwndw/AnswerQuest";
+import {UserContext} from "../../context";
 
 
 const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, emails, answerTypes}) => {
+    const {userSession} = useContext((UserContext))
     useEffect(() => {
         emails = emails.sort();
         answerTypes = answerTypes.sort((at, at1) => {
@@ -12,9 +13,12 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
         })
     })
     const [newQuest, setNewQuest] = useState({
+        id: null,
+        emailFromUser: userSession.email,
         emailForUser: emails.length !== 0 ? emails[0] : "",
         questionText: "",
-        nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
+        answerText: "",
+        answerType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
         options: ""
     });
 
@@ -62,7 +66,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                         <td>Answer type</td>
                         <td><select className="form-select"
                                     onChange={(e) => {
-                                        setNewQuest({...newQuest, nameType: e.target.value})
+                                        setNewQuest({...newQuest, answerType: e.target.value})
                                     }}>
                             {answerTypes.map((answerType) => {
                                 return (
@@ -74,7 +78,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                     </tr>
                     {
                         // решаем вопрос будим ли мы отображать options для нового вопроса
-                        (newQuest.nameType === ANSWER_TYPES[3] || newQuest.nameType === ANSWER_TYPES[4] || newQuest.nameType === ANSWER_TYPES[5])
+                        (newQuest.answerType === ANSWER_TYPES[3] || newQuest.answerType === ANSWER_TYPES[4] || newQuest.answerType === ANSWER_TYPES[5])
                             ?
                             < tr>
                                 < td> Options< /td>
