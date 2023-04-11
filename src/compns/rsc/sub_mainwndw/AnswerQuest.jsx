@@ -12,10 +12,12 @@ import RowAnswerQuest from "./sub_questcmp/RowAnswerQuest";
 import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 
 const AnswerQuest = () => {
+    const {userSession} = useContext(UserContext)
     let quests = [
         {
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
             emailFromUser: "11111sldkfje3ds@gmail.com",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
@@ -24,6 +26,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjgggflk jsdlf",
             emailFromUser: "22222sldkfjds@7gmail.com",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Multiline text",
             answerText: " slkfjdslf232323",
@@ -32,6 +35,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjfjhjflk jss",
             emailFromUser: "33333sldkfjds@gma8il.com",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
             answerText: "2019-01-01",
@@ -40,6 +44,7 @@ const AnswerQuest = () => {
         {
             id: "jsdlfk ghjghjjdslk fjs",
             emailFromUser: "4444444sldkfsdf@gmail.0com",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
             answerText: "we",
@@ -48,6 +53,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
             emailFromUser: "5555555sklkldkfjds@gmail.co7m",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
             answerText: "slf2",
@@ -56,6 +62,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
             emailFromUser: "666666666sldkfjdssd@gmail7.com",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: "323n\nslf2",
@@ -64,6 +71,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
             emailFromUser: "77777777773mail.c4om",
+            emailForUser: userSession.email,
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: "",
@@ -76,10 +84,12 @@ const AnswerQuest = () => {
     const [visibleAnswerTheQuest, setVisibleAnswerTheQuest] = useState({
         visible: false,
         clickedQuest: {
+            id: "",
             emailFromUser: "",
+            emailForUser: userSession.email,
             questionText: "",
             answerText: "", // это сам ответ от пользователя
-            nameType: "", // это тип вопроса!!
+            answerType: "", // это тип вопроса!!
             options: ""
         },
         callbackAction: (answeredQuest) => {
@@ -143,10 +153,12 @@ const AnswerQuest = () => {
         setVisibleAnswerTheQuest({
             visible: true,
             clickedQuest: {
+                id: clickedQuestion.id,
                 emailFromUser: clickedQuestion.emailFromUser,
+                emailForUser: clickedQuestion.emailForUser,
                 questionText: clickedQuestion.questionText,
                 answerText: clickedQuestion.answerText, //  это содержимое вопроса
-                nameType: clickedQuestion.answerType, // ВНИМАНИЕ ЗДЕСЬ nameType  === ~~ === answerType // это тип вопроса, как визуально отобразить
+                answerType: clickedQuestion.answerType,
                 options: clickedQuestion.options
             },
             // У нас здесь обработка !!!!!

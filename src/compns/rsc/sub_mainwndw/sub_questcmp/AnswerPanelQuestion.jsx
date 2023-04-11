@@ -13,14 +13,14 @@ const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) 
         const [nameAnswerType, setNameAnswerType] = useState('')
         useEffect(() => {
             console.log("dddccdfsfsdfsdfdsfdsp dsf dsf sdfds111111111111111111")
-            setNameAnswerType(visibleAnswerTheQuest.clickedQuest.nameType)
+            setNameAnswerType(visibleAnswerTheQuest.clickedQuest.answerType)
         }, [looperStop])
         const [dataRetriever, setDataRetriever] = useState({
             answerText: "",
             options: [],
         })
         useEffect(() => {
-                let answerType = visibleAnswerTheQuest.clickedQuest.nameType;
+                let answerType = visibleAnswerTheQuest.clickedQuest.answerType;
                 if (ANSWER_TYPES[0] === answerType) { // Single line text
                     setDataRetriever({...dataRetriever, answerText: visibleAnswerTheQuest.clickedQuest.answerText})
                 } else if (ANSWER_TYPES[1] === answerType) { //Multiline text
@@ -52,7 +52,7 @@ const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) 
             e.preventDefault()
             console.log(dataRetriever)
 
-            let textAnswer = prepareAnswerText(visibleAnswerTheQuest.clickedQuest.nameType, dataRetriever)
+            let textAnswer = prepareAnswerText(visibleAnswerTheQuest.clickedQuest.answerType, dataRetriever)
             let question = {...visibleAnswerTheQuest.clickedQuest, answerText: textAnswer};
             visibleAnswerTheQuest.callbackAction(question) // invoke callback
         }
@@ -89,7 +89,7 @@ const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) 
                         <tr>
                             <td>Answer</td>
                             <td> {
-                                generateHtmlOptions(visibleAnswerTheQuest.clickedQuest.nameType,
+                                generateHtmlOptions(visibleAnswerTheQuest.clickedQuest.answerType,
                                     dataRetriever, setDataRetriever)
                             }</td>
                         </tr>

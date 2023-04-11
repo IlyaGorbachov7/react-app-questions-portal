@@ -10,11 +10,12 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
             return (at.id < at1.id) ? -1 : (at.id > at1.id) ? 1 : 0
         })
     })
-    const [editQuest, setEditQuest] = useState({...visibleUpdateQuest.questOnUpdate,
-        answerText : ""}); // обязательно удаляем ОТВЕТ на этот проврос, если этот вопрос мы захотели изменить
+    const [editQuest, setEditQuest] = useState({...visibleUpdateQuest.questOnUpdate}); // обязательно удаляем ОТВЕТ на этот проврос, если этот вопрос мы захотели изменить
 
     function handlerBtnUpdateQuest(e) {
         e.preventDefault()
+        // Only when user clicked on the edit question, necessary clear at the last answer the question
+        editQuest.answerText = "";
         visibleUpdateQuest.callbackAction(editQuest)
     }
 
