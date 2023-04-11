@@ -16,7 +16,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
             fromUser: "11111sldkfje3ds@gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
             options: null
@@ -24,7 +24,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjgggflk jsdlf",
             fromUser: "22222sldkfjds@7gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Multiline text",
             answerText: " slkfjdslf232323",
             options: null
@@ -32,7 +32,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjfjhjflk jss",
             fromUser: "33333sldkfjds@gma8il.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
             answerText: "2019-01-01",
             options: null
@@ -40,7 +40,7 @@ const AnswerQuest = () => {
         {
             id: "jsdlfk ghjghjjdslk fjs",
             fromUser: "4444444sldkfsdf@gmail.0com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
             answerText: "we",
             options: "we\nsdfsdf\n,sfsfsd\n"
@@ -48,7 +48,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
             fromUser: "5555555sklkldkfjds@gmail.co7m",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
             answerText: "slf2",
             options: "slkfjd\nslf2\n323n\n23"
@@ -56,7 +56,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
             fromUser: "666666666sldkfjdssd@gmail7.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: "323n\nslf2",
             options: "slkfjd\nslf2\n323n\n23"
@@ -64,7 +64,7 @@ const AnswerQuest = () => {
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
             fromUser: "77777777773mail.c4om",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: "",
             options: " slkfjdslf232323"
@@ -77,7 +77,7 @@ const AnswerQuest = () => {
         visible: false,
         clickedQuest: {
             fromUser: "",
-            question: "",
+            questionText: "",
             answerText: "", // это сам ответ от пользователя
             nameType: "", // это тип вопроса!!
             options: ""
@@ -144,7 +144,7 @@ const AnswerQuest = () => {
             visible: true,
             clickedQuest: {
                 fromUser: clickedQuestion.fromUser,
-                question: clickedQuestion.question,
+                questionText: clickedQuestion.questionText,
                 answerText: clickedQuestion.answerText, //  это содержимое вопроса
                 nameType: clickedQuestion.answerType, // ВНИМАНИЕ ЗДЕСЬ nameType  === ~~ === answerType // это тип вопроса, как визуально отобразить
                 options: clickedQuestion.options

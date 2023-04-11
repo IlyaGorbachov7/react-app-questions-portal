@@ -13,7 +13,7 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
     })
     const [newQuest, setNewQuest] = useState({
         forUser: emails.length !== 0 ? emails[0] : "",
-        question: "",
+        questionText: "",
         nameType: answerTypes.length !== 0 ? answerTypes[0].nameType : "",
         options: ""
     });
@@ -54,8 +54,8 @@ const AddPanelYourQuestion = ({children, visibleAddQuest, setVisibleAddQuest, em
                         <td>Question</td>
                         <td>
                             <input type="text" className="form-control"
-                                   value={newQuest.question}
-                                   onChange={(e) => setNewQuest({...newQuest, question: e.target.value})}/>
+                                   value={newQuest.questionText}
+                                   onChange={(e) => setNewQuest({...newQuest, questionText: e.target.value})}/>
                         </td>
                     </tr>
                     <tr>

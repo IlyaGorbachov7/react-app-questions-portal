@@ -30,7 +30,7 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
             forUser: "11111sldkfje3ds@gmail.com",
-            question: "Чемы бы ты хотел заниматся ?",
+            questionText: "Чемы бы ты хотел заниматся ?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
             options: null
@@ -38,7 +38,7 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjgggflk jsdlf",
             forUser: "22222sldkfjds@7gmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
             answerText: "fff",
             options: "hfp\nxtnhst\nxnj\nfff"
@@ -46,7 +46,7 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjfjhjflk jss",
             forUser: "33333sldkfjds@gma8il.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: " slkfjdslf232323",
             options: "slkfjdslf232323\nYOur\nNo"
@@ -54,7 +54,7 @@ const YourQuest = () => {
         {
             id: "jsdlfk ghjghjjdslk fjs",
             forUser: "4444444sldkfsdf@gmail.0com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
             answerText: " slkfjdslf232323",
             options: null
@@ -63,7 +63,7 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
             forUser: "5555555sklkldkfjds@gmail.co7m",
-            question: "Your border ?",
+            questionText: "Your border ?",
             answerType: "Date",
             answerText: "2023-08-01",
             options: null,
@@ -71,7 +71,7 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
             forUser: "666666666sldkfjdssd@gmail7.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
             answerText: " slkfjdslf232323",
             options: "332\n242\n999",
@@ -79,15 +79,15 @@ const YourQuest = () => {
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
             forUser: "77777777773mail.c4om",
-            question: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: " Multiline text",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
+            answerType: "Multiline text",
             answerText: "Что бы блять \n тваришь что же давай друг!!!",
             options: null,
         },
         {
             id: "eyug8980fvd",
             forUser: "8888888888234ldkfjds@gmail.c0om",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
             answerText: "",
             options: null,
@@ -95,7 +95,7 @@ const YourQuest = () => {
         {
             id: "876865ff907089vdc",
             forUser: "99999999999924455dkfjds@gvmail.com",
-            question: "Wlkjfsdlfkjsflk kjfd?",
+            questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
             answerText: "",
             options: " 1\n2\n3",
@@ -207,7 +207,7 @@ const YourQuest = () => {
             questOnUpdate: {
                 id: quest.id,
                 forUser: quest.forUser,
-                question: quest.question,
+                questionText: quest.questionText,
                 answerText: quest.answerText,
                 nameType: quest.answerType, // обрати внимаение, что зесь поля отличаются
                 options: quest.options

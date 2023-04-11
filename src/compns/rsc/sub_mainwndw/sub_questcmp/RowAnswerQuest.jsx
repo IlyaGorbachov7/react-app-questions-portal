@@ -10,7 +10,7 @@ const RowAnswerQuest = ({q, giveAnswerCallback}) => {
     return (
         <tr>
             <td scope="row">{q.fromUser}</td>
-            <td>{q.question}</td>
+            <td>{q.questionText}</td>
             {/*<td>{q.answerType}</td>*/}
             <td>{q.answerText}</td>
             <td width={"8%"}>

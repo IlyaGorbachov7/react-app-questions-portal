@@ -48,8 +48,8 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
                         <td>Question</td>
                         <td>
                             <input type="text" className="form-control"
-                                   value={editQuest.question}
-                                   onChange={(e) => setEditQuest({...editQuest, question: e.target.value})}/>
+                                   value={editQuest.questionText}
+                                   onChange={(e) => setEditQuest({...editQuest, questionText: e.target.value})}/>
                         </td>
                     </tr>
                     <tr>

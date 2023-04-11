@@ -82,7 +82,7 @@ const AnswerPanelQuestion = ({visibleAnswerTheQuest, setVisibleAnswerTheQuest}) 
                             <td>Question</td>
                             <td>
                                 <div>
-                                    {visibleAnswerTheQuest.clickedQuest.question}
+                                    {visibleAnswerTheQuest.clickedQuest.questionText}
                                 </div>
                             </td>
                         </tr>
