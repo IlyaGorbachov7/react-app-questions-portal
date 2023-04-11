@@ -8,12 +8,17 @@ import Requests from "../api/Requests";
 import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
 import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
 import {UserContext} from "../context";
+import ErrorModal from "../ErrrorModal";
 
 const YourQuest = () => {
     const {userSession} = useContext(UserContext)
     const stoperLoop = useRef(0)
     // trigger чтобы  автоматически сработали нужные useEffect-ы
     const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
+    const [visibleError, setVisibleError] = useState({
+        htmlE: <></>,
+        visible: false
+    })
     const [visibleAddQuest, setVisibleAddQuest] = useState({
         visible: false,
         callbackAction: (newQuest) => {
@@ -130,7 +135,6 @@ const YourQuest = () => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountYourQuestions().then(totalCount => {
             setTotalCountRecord(totalCount)
-            setPrintRange(rangeViewHtml(viewLimitCount, totalCount, curPage, Math.ceil(totalCount / viewLimitCount)))
         })
     }, [viewLimitCount, triggerOnAddUpdate])
     useEffect(() => {
@@ -152,10 +156,15 @@ const YourQuest = () => {
             })
     }, [stoperLoop])
 
+    useEffect(()=>{
+        setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
+    },[totalCountRecord, curPage, viewLimitCount])
+
     async function loadCountYourQuestions() {
         try {
             console.log("Запрос на КОЛИЧЕСТВО вопросов:")
             const count = await Requests.getTotalCountYourQuest();
+            debugger
             return count
         } catch (e) {
             console.log(e)
@@ -201,17 +210,24 @@ const YourQuest = () => {
         setVisibleAddQuest({
             visible: true,
             callbackAction: (newQuest) => {
-                // request on the save file
-                debugger
-                console.log(newQuest)
-                Requests.createQuestion(newQuest)
-                    .then(r => {
-                        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-                        setVisibleAddQuest({
-                            visible: false
+                if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
+                    debugger
+                    console.log(newQuest)
+                    Requests.createQuestion(newQuest)
+                        .then(r => {
+                            setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                            setVisibleAddQuest({
+                                visible: false
+                            })
                         })
+                } else {
+                    setVisibleError({
+                        visible: true,
+                        htmlE: <>Pleas, choose answer type and user email</>
                     })
+                }
             }
+
         })
     }
 
@@ -231,11 +247,11 @@ const YourQuest = () => {
             callbackAction: (updatedQuest) => {
                 debugger
                 Requests.updateQuestion(updatedQuest).then(r => {
-                        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-                        setVisibleUpdateQuest({
-                            visible: false
-                        })
+                    setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                    setVisibleUpdateQuest({
+                        visible: false
                     })
+                })
             }
         })
     }
@@ -263,6 +279,7 @@ const YourQuest = () => {
                                                                         emails={emails} answerTypes={answerTypes}/>
                     : <></>
             }
+            <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
                  style={{minWidth: "720px"}}>
                 <div className="d-flex flex-row p-2">

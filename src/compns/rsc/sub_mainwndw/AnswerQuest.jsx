@@ -10,12 +10,15 @@ import RowQuestions from "./sub_questcmp/RowQuestions";
 import TablePaginationDemo from "./sub_questcmp/TableParinationDemo";
 import RowAnswerQuest from "./sub_questcmp/RowAnswerQuest";
 import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
+import ErrorModal from "../ErrrorModal";
 
 const AnswerQuest = () => {
     const {userSession} = useContext(UserContext)
     const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
-
-    const stoperLoop = useRef('')
+    const [visibleError, setVisibleError] = useState({
+        htmlE: <></>,
+        visible: false
+    })
     const [visibleAnswerTheQuest, setVisibleAnswerTheQuest] = useState({
         visible: false,
         clickedQuest: {
@@ -46,7 +49,6 @@ const AnswerQuest = () => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountAnswerQuestions().then(totalCount => {
             setTotalCountRecord(totalCount)
-            setPrintRange(rangeViewHtml(viewLimitCount, totalCount, curPage, Math.ceil(totalCount / viewLimitCount)))
         })
     }, [viewLimitCount, triggerOnAnswer])
     useEffect(() => {
@@ -57,6 +59,9 @@ const AnswerQuest = () => {
             setQuestions(quest)
         })
     }, [viewLimitCount, curPage, triggerOnAnswer])
+    useEffect(()=>{
+        setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
+    },[totalCountRecord, curPage,viewLimitCount])
 
     async function loadCountAnswerQuestions() {
         try {
@@ -95,14 +100,22 @@ const AnswerQuest = () => {
             // У нас здесь обработка !!!!!
             callbackAction: (answeredQuest) => {
                 // делаем запрос в сервер, что на вопрос мы ответили
-                console.log(answeredQuest)
-                debugger
-                Requests.answerTheQuestion(answeredQuest).then(r => {
-                    setTriggerOnAnswer((triggerOnAnswer) ? false : true)
-                    setVisibleAnswerTheQuest({
-                        visible: false
+                if(answeredQuest.answerText !== "") {
+                    console.log(answeredQuest)
+                    debugger
+                    Requests.answerTheQuestion(answeredQuest).then(r => {
+
+                        setTriggerOnAnswer((triggerOnAnswer) ? false : true)
+                        setVisibleAnswerTheQuest({
+                            visible: false
+                        })
                     })
-                })
+                }else{
+                    setVisibleError({
+                        visible: true,
+                        htmlE: <>Please, give the question</>
+                    })
+                }
             }
         })
     }
@@ -116,6 +129,7 @@ const AnswerQuest = () => {
                                          setVisibleAnswerTheQuest={setVisibleAnswerTheQuest}/>
                     : <></>
             }
+            <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
                  style={{minWidth: "720px"}}>
                 <div className="d-flex flex-row p-2">
