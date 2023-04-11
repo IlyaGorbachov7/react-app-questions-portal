@@ -13,72 +13,7 @@ import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 
 const AnswerQuest = () => {
     const {userSession} = useContext(UserContext)
-    let quests = [
-        {
-            id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
-            emailFromUser: "11111sldkfje3ds@gmail.com",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Single line text",
-            answerText: " slkfjdslf232323",
-            options: null
-        },
-        {
-            id: "sldkfj lsdjgggflk jsdlf",
-            emailFromUser: "22222sldkfjds@7gmail.com",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Multiline text",
-            answerText: " slkfjdslf232323",
-            options: null
-        },
-        {
-            id: "sldkfj lsdjfjhjflk jss",
-            emailFromUser: "33333sldkfjds@gma8il.com",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Date",
-            answerText: "2019-01-01",
-            options: null
-        },
-        {
-            id: "jsdlfk ghjghjjdslk fjs",
-            emailFromUser: "4444444sldkfsdf@gmail.0com",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Radio button",
-            answerText: "we",
-            options: "we\nsdfsdf\n,sfsfsd\n"
-        },
-        {
-            id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
-            emailFromUser: "5555555sklkldkfjds@gmail.co7m",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Combo box",
-            answerText: "slf2",
-            options: "slkfjd\nslf2\n323n\n23"
-        },
-        {
-            id: "sldkfj lsdjfl3q3233333jdslk fjs",
-            emailFromUser: "666666666sldkfjdssd@gmail7.com",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: "323n\nslf2",
-            options: "slkfjd\nslf2\n323n\n23"
-        },
-        {
-            id: "sldkfj lsdjflk 934557999999 fjs",
-            emailFromUser: "77777777773mail.c4om",
-            emailForUser: userSession.email,
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: "",
-            options: " slkfjdslf232323"
-
-        }
-    ]
+    const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
 
     const stoperLoop = useRef('')
     const [visibleAnswerTheQuest, setVisibleAnswerTheQuest] = useState({
@@ -111,23 +46,23 @@ const AnswerQuest = () => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountAnswerQuestions().then(totalCount => {
             setTotalCountRecord(totalCount)
+            setPrintRange(rangeViewHtml(viewLimitCount, totalCount, curPage, Math.ceil(totalCount / viewLimitCount)))
         })
-    }, [viewLimitCount, /*curPage*/]) // ну вроде как работает, я ропсто хояу оптимизировать, чтобы не делать лишние запросы
+    }, [viewLimitCount, triggerOnAnswer])
     useEffect(() => {
         // срабатывет 1 раз при загрузке после верхнего запроса
         // и запрос делает всегода, => получить порцию вопросов
         loadAnswerQuestions().then(quest => {
             console.log(quest)
             setQuestions(quest)
-            setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
         })
-    }, [viewLimitCount, curPage])
+    }, [viewLimitCount, curPage, triggerOnAnswer])
 
     async function loadCountAnswerQuestions() {
         try {
             console.log("Запрос на КОЛИЧЕСТВО вопросов ")
-            // const count = await Requests.getTotalCountYourQuest();
-            return quests.length
+            const count = await Requests.getTotalCountAnswerQuest();
+            return count;
         } catch (e) {
             console.log(e)
         }
@@ -136,20 +71,16 @@ const AnswerQuest = () => {
     async function loadAnswerQuestions() {
         if (viewLimitCount === -1) {
             console.log("Запрос на получения ВСЕХ вопросов ")
-            // return await Requests.getAllYourQuestions();
-            return quests.slice(0, quests.length)
+            return await Requests.getAllAnswerQuestions();
         } else {
             console.log("Запрос на получения СТРОАНЦУ вопросов " + curPage + " " + viewLimitCount)
-            // return await Requests.getYourQuestionsPage(curPage, viewLimitCount)
-            let [st, ed] = rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount))
-            return quests.slice(st - 1, ed);
+            return await Requests.getAnswerQuestionsPage(curPage, viewLimitCount)
         }
-
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    async function handlerClickOnTheRowAnswerTheQuest(clickedQuestion) {
+    function handlerClickOnTheRowAnswerTheQuest(clickedQuestion) {
         setVisibleAnswerTheQuest({
             visible: true,
             clickedQuest: {
@@ -165,23 +96,13 @@ const AnswerQuest = () => {
             callbackAction: (answeredQuest) => {
                 // делаем запрос в сервер, что на вопрос мы ответили
                 console.log(answeredQuest)
-                // Requests.updateQuestion(answeredQuest).then(res => {
-                //
-                //     // обнаялем список делая запрос в базу данных
-                //     loadCountAnswerQuestions().then(count => { // получаем из базы данных вопросы
-                //         setTotalCountRecord(count)
-                //         loadAnswerQuestions().then(qus => {
-                //             setQuestions(qus)
-                //             // можем закрывать  это ModelVie, вот таким образом
-                //             setVisibleAnswerTheQuest({
-                //                 visible: false,
-                //                 clickedQuest: null,
-                //                 callbackAction: () => {
-                //                 }
-                //             })
-                //         })
-                //     })
-                // })
+                debugger
+                Requests.answerTheQuestion(answeredQuest).then(r => {
+                    setTriggerOnAnswer((triggerOnAnswer) ? false : true)
+                    setVisibleAnswerTheQuest({
+                        visible: false
+                    })
+                })
             }
         })
     }

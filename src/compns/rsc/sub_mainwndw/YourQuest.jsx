@@ -11,7 +11,9 @@ import {UserContext} from "../context";
 
 const YourQuest = () => {
     const {userSession} = useContext(UserContext)
-    const stoperLoop = useRef('')
+    const stoperLoop = useRef(0)
+    // trigger чтобы  автоматически сработали нужные useEffect-ы
+    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
     const [visibleAddQuest, setVisibleAddQuest] = useState({
         visible: false,
         callbackAction: (newQuest) => {
@@ -32,7 +34,7 @@ const YourQuest = () => {
         {
 
             id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "11111sldkfje3ds@gmail.com",
             questionText: "Чемы бы ты хотел заниматся ?",
             answerType: "Single line text",
@@ -41,7 +43,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjgggflk jsdlf",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "22222sldkfjds@7gmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Combo box",
@@ -50,7 +52,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfjhjflk jss",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "33333sldkfjds@gma8il.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
@@ -59,7 +61,7 @@ const YourQuest = () => {
         },
         {
             id: "jsdlfk ghjghjjdslk fjs",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "4444444sldkfsdf@gmail.0com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Single line text",
@@ -69,7 +71,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "5555555sklkldkfjds@gmail.co7m",
             questionText: "Your border ?",
             answerType: "Date",
@@ -78,7 +80,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjfl3q3233333jdslk fjs",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "666666666sldkfjdssd@gmail7.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Check box",
@@ -87,7 +89,7 @@ const YourQuest = () => {
         },
         {
             id: "sldkfj lsdjflk 934557999999 fjs",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "77777777773mail.c4om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Multiline text",
@@ -96,7 +98,7 @@ const YourQuest = () => {
         },
         {
             id: "eyug8980fvd",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "8888888888234ldkfjds@gmail.c0om",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Date",
@@ -105,7 +107,7 @@ const YourQuest = () => {
         },
         {
             id: "876865ff907089vdc",
-            emailFromUser:userSession.email,
+            emailFromUser: userSession.email,
             emailForUser: "99999999999924455dkfjds@gvmail.com",
             questionText: "Wlkjfsdlfkjsflk kjfd?",
             answerType: "Radio button",
@@ -128,17 +130,17 @@ const YourQuest = () => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountYourQuestions().then(totalCount => {
             setTotalCountRecord(totalCount)
+            setPrintRange(rangeViewHtml(viewLimitCount, totalCount, curPage, Math.ceil(totalCount / viewLimitCount)))
         })
-    }, [viewLimitCount, /*curPage*/]) // ну вроде как работает, я ропсто хояу оптимизировать, чтобы не делать лишние запросы
+    }, [viewLimitCount, triggerOnAddUpdate])
     useEffect(() => {
         // срабатывет 1 раз при загрузке после верхнего запроса
         // и запрос делает всегода, => получить порцию вопросов
         loadYourQuestion().then(quest => {
             console.log(quest)
             setQuestions(quest)
-            setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
         })
-    }, [viewLimitCount, curPage])
+    }, [viewLimitCount, curPage, triggerOnAddUpdate])
     useEffect(() => {
         loadAllEmailsUsers()
             .then(r => {
@@ -152,9 +154,9 @@ const YourQuest = () => {
 
     async function loadCountYourQuestions() {
         try {
-            console.log("Запрос на КОЛИЧЕСТВО вопросов ")
-            // const count = await Requests.getTotalCountYourQuest();
-            return quests.length
+            console.log("Запрос на КОЛИЧЕСТВО вопросов:")
+            const count = await Requests.getTotalCountYourQuest();
+            return count
         } catch (e) {
             console.log(e)
         }
@@ -163,13 +165,10 @@ const YourQuest = () => {
     async function loadYourQuestion() {
         if (viewLimitCount === -1) {
             console.log("Запрос на получения ВСЕХ вопросов ")
-            // return await Requests.getAllYourQuestions();
-            return quests.slice(0, quests.length)
+            return await Requests.getAllYourQuestions();
         } else {
             console.log("Запрос на получения СТРОАНЦУ вопросов " + curPage + " " + viewLimitCount)
-            // return await Requests.getYourQuestionsPage(curPage, viewLimitCount)
-            let [st, ed] = rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount))
-            return quests.slice(st - 1, ed);
+            return await Requests.getYourQuestionsPage(curPage, viewLimitCount)
         }
 
     }
@@ -198,27 +197,31 @@ const YourQuest = () => {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    async function deleteQuestion(id) {
-        // await Requests.deleteQuestion(id)
-        console.log("Question this id: " + id + " is deleted")
-        // это унжно сделать обязаельно ИМЕННО ОБРАТСЯ СНОВО К серверу за вопросами, так как, он вернет
-        // мне вопросы а в визуалке некоторые вопросы (из других невидимых старничак) подтянутся ко мне,
-        // при чем мы не опирируем всем массивом данных мы работает с частями вопросов!!!!
-
-        // await getCountYourQuestions() // полностю обнавляем и количество и списко вопросов из базы данных
-
-        // имитируем удаление
-        quests = quests.filter(q => q.id !== id)
-        setTotalCountRecord(quests.length)
+    function addYourQuestion() {
+        setVisibleAddQuest({
+            visible: true,
+            callbackAction: (newQuest) => {
+                // request on the save file
+                debugger
+                console.log(newQuest)
+                Requests.createQuestion(newQuest)
+                    .then(r => {
+                        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                        setVisibleAddQuest({
+                            visible: false
+                        })
+                    })
+            }
+        })
     }
 
-    async function updateQuestion(quest) {
+    function updateQuestion(quest) {
         console.log("Запусаем оно для обнавленя для вопроса" + "и там проводим разнового рода операции")
         setVisibleUpdateQuest({
             visible: true,
             questOnUpdate: {
                 id: quest.id,
-                emailFromUser:quest.emailFromUser,
+                emailFromUser: quest.emailFromUser,
                 emailForUser: quest.emailForUser,
                 questionText: quest.questionText,
                 answerText: quest.answerText,
@@ -226,18 +229,21 @@ const YourQuest = () => {
                 options: quest.options
             },
             callbackAction: (updatedQuest) => {
-                // request on the update quest
+                debugger
+                Requests.updateQuestion(updatedQuest).then(r => {
+                        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                        setVisibleUpdateQuest({
+                            visible: false
+                        })
+                    })
             }
         })
     }
 
-    function addYourQuestion() {
-        setVisibleAddQuest({
-            visible: true,
-            callbackAction: (newQuest) => {
-                // request on the save file
-                console.log(newQuest)
-            }
+    function deleteQuestion(id) {
+        console.log("Question this id: " + id + " is deleted")
+        Requests.deleteQuestion(id).then(r => {
+            setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
         })
     }
 

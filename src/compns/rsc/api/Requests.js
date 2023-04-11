@@ -78,16 +78,6 @@ export default class Requests {
         return response.data;
     }
 
-    static async getAnswerTypeById(id) {
-        const response = await ax.get("/answer-types/" + id, {
-            headers: {
-                Authorization: "Bearer " + this.getToken()
-            }
-        })
-        return response.data;
-    }
-
-
 //------------------------------------------------------------------------------------------
 
     static async createQuestion(newQuest) {
@@ -109,11 +99,13 @@ export default class Requests {
     }
 
     static async answerTheQuestion(quest) {
+        debugger
         const response = await ax.patch("/questions/", quest, {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
         })
+        return response;
     }
 
     static async deleteQuestion(id) {
@@ -144,7 +136,7 @@ export default class Requests {
     }
 
     static async getAllYourQuestions() {
-        const response = await ax.get("/questions/from-me", {
+        const response = await ax.get("/questions/from-me/all", {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
@@ -154,7 +146,7 @@ export default class Requests {
 
 
     static async getAllAnswerQuestions() {
-        const response = await ax.get("/questions/for-me", {
+        const response = await ax.get("/questions/for-me/all", {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
