@@ -90,8 +90,43 @@ export default class Requests {
 
 //------------------------------------------------------------------------------------------
 
+    static async createQuestion(newQuest) {
+        const response = await ax.post("/questions/", newQuest, {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async updateQuestion(quest) {
+        const response = await ax.put("/questions/", quest, {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+    static async answerTheQuestion(quest) {
+        const response = await ax.patch("/questions/", quest, {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+    }
+
+    static async deleteQuestion(id) {
+        const response = await ax.delete("/questions/" + id, {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
     static async getTotalCountYourQuest() {
-        const response = await ax.get("/questions/from-me/count", {
+        const response = await ax.get("/questions/from-me/quantity", {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
@@ -100,7 +135,7 @@ export default class Requests {
     }
 
     static async getTotalCountAnswerQuest() {
-        const response = await ax.get("/questions/for-me/count", {
+        const response = await ax.get("/questions/for-me/quantity", {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
@@ -110,6 +145,16 @@ export default class Requests {
 
     static async getAllYourQuestions() {
         const response = await ax.get("/questions/from-me", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        return response.data;
+    }
+
+
+    static async getAllAnswerQuestions() {
+        const response = await ax.get("/questions/for-me", {
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
@@ -130,27 +175,16 @@ export default class Requests {
         return response.data;
     }
 
-
-    static async getAllAnswerQuestions() {
+    static async getAnswerQuestionsPage(page, limit) {
         const response = await ax.get("/questions/for-me", {
+            params: {
+                page: page,
+                limit: limit
+            },
             headers: {
                 Authorization: "Bearer " + this.getToken()
             }
         })
         return response.data;
-    }
-
-    static async deleteQuestion(id) {
-        const response = await ax.delete("/questions/from-me/", {
-            data: id,
-            headers: {
-                Authorization: "Bearer " + this.getToken()
-            }
-        })
-        return response.data;
-    }
-
-    static async updateQuestion(updateQuest){
-
     }
 }

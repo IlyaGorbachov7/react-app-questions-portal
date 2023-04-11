@@ -15,7 +15,9 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
     function handlerBtnUpdateQuest(e) {
         e.preventDefault()
         // Only when user clicked on the edit question, necessary clear at the last answer the question
+        console.log("old answerText : " + editQuest.answerText)
         editQuest.answerText = "";
+        console.log(editQuest)
         visibleUpdateQuest.callbackAction(editQuest)
     }
 
