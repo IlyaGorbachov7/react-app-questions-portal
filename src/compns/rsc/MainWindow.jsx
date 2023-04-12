@@ -9,12 +9,20 @@ import EditProfile from "./sub_mainwndw/EditProfile";
 import useToken from "./hooks/useToken";
 import Requests from "./api/Requests";
 import {UserContext} from "./context";
+import {Stomp} from "@stomp/stompjs";
+import SockJS from 'sockjs-client'
 import {prepareHtmlMsgErrorTokenTimeExpired} from "../scripts/Registration";
 import ActionModal from "./ActionModal";
+import {WS_CROSS_ORIGIN} from "./api/RemoteServier";
+
 
 const MainWindow = () => {
     const [token, setToken, clearToken] = useToken();
     const navigate = useNavigate()
+
+    const [connect, setConnect] = useState(false);
+    let stompClient = React.useRef(null);
+
     const [visibleAction, setVisibleAction] = useState({
         visible: false,
         btnName: "",
@@ -29,6 +37,8 @@ const MainWindow = () => {
         lastName: "",
         phone: ""
     })
+    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
+    const [triggerOnAnswer, setTriggerOnAnswer] = useState(true)
     const userName = useMemo(() => {
         let username = (userData.firstName + ' ' + userData.lastName).trim();
         if (username !== '') {
@@ -40,6 +50,7 @@ const MainWindow = () => {
     useEffect(() => {
         getCurUser()
     }, [])
+    let userEmail = null;
 
     function getCurUser() {
         async function getCurUser() {
@@ -48,8 +59,14 @@ const MainWindow = () => {
 
         getCurUser().then(r => {
             console.log(r)
+            userEmail = r.email;
             setUserData(r)
             setIsLoaded(true)
+            if (connect === true) {
+                return;
+            }
+            connection();
+
         }).catch((err) => {
             if (err.response.status === 401) { // если токин есть, но время истекло, тогда просим, чтобы он занова перезашел
                 setVisibleAction({
@@ -64,12 +81,70 @@ const MainWindow = () => {
         });
     }
 
+
+    function onCreatedUser() {
+
+    }
+
+    function onDeleteUser() {
+
+    }
+
+    function onUpdateQuestions(payload) {
+        debugger
+        let email = payload.body;
+        console.log("Update statements current user ...>>>>>>> " + email)
+        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+        setTriggerOnAnswer((triggerOnAnswer) ? false : true)
+    }
+
+    function sendQueryToUpdateStatementsUser(email) {
+        debugger
+        stompClient.current.send("/app/private/update", {'Authorization': Requests.getTokenWithBearer()}, email)
+    }
+
+
+    function subscribeCurrentClient() {
+        // debugger
+
+        // сервер будет присылать на ЭТИ URL мне сообщения!!!!!
+        stompClient.current.subscribe('/topic/user/create', onCreatedUser, {'Authorization': Requests.getTokenWithBearer()})
+        stompClient.current.subscribe('/topic/user/delete', onDeleteUser, {'Authorization': Requests.getTokenWithBearer()})
+        // сервер будет присылать сообщение ТЕКУЩЕМУ ПОЛЬЗОВАТЕЛЮ ОТ Другого пользователя
+        stompClient.current.subscribe('/user/' + userEmail + '/update', onUpdateQuestions, {'Authorization': Requests.getTokenWithBearer()})
+        setConnect(true)
+    }
+
+    function connection() {
+        stompClient.current = Stomp.over(function () {
+            return new SockJS(WS_CROSS_ORIGIN)
+        });
+        // debugger
+        stompClient.current.connect({'Authorization': Requests.getTokenWithBearer()}, subscribeCurrentClient, function (err) {
+            // debugger
+            setVisibleAction({
+                visible: true, btnName: "Log In",
+                msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                    e.preventDefault()
+                    clearToken()
+                    navigate('/login')
+                }
+            })
+        });
+        // debugger
+    }
+
     return (
         <UserContext.Provider value={{
             userSession: userData,
             setUserSession: setUserData,
             isLoaded,
-            getCurUser: getCurUser
+            getCurUser: getCurUser,
+            triggerOnAddUpdate,
+            setTriggerOnAddUpdate: setTriggerOnAddUpdate,
+            triggerOnAnswer,
+            setTriggerOnAnswer: setTriggerOnAnswer,
+            sendQueryToUpdateStatementsUser
         }}>
             {
                 (token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,

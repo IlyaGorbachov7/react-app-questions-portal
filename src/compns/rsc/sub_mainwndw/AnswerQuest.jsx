@@ -13,8 +13,11 @@ import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 import ErrorModal from "../ErrrorModal";
 
 const AnswerQuest = () => {
-    const {userSession} = useContext(UserContext)
-    const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
+    const {
+        userSession, sendQueryToUpdateStatementsUser,
+        triggerOnAnswer, setTriggerOnAnswer
+    } = useContext(UserContext)
+    // const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
@@ -59,9 +62,9 @@ const AnswerQuest = () => {
             setQuestions(quest)
         })
     }, [viewLimitCount, curPage, triggerOnAnswer])
-    useEffect(()=>{
+    useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
-    },[totalCountRecord, curPage,viewLimitCount])
+    }, [totalCountRecord, curPage, viewLimitCount])
 
     async function loadCountAnswerQuestions() {
         try {
@@ -100,17 +103,17 @@ const AnswerQuest = () => {
             // У нас здесь обработка !!!!!
             callbackAction: (answeredQuest) => {
                 // делаем запрос в сервер, что на вопрос мы ответили
-                if(answeredQuest.answerText !== "") {
+                if (answeredQuest.answerText !== "") {
                     console.log(answeredQuest)
                     debugger
                     Requests.answerTheQuestion(answeredQuest).then(r => {
-
-                        setTriggerOnAnswer((triggerOnAnswer) ? false : true)
+                        sendQueryToUpdateStatementsUser(answeredQuest.emailFromUser)
+                        setTriggerOnAnswer(((triggerOnAnswer) ? false : true))
                         setVisibleAnswerTheQuest({
                             visible: false
                         })
                     })
-                }else{
+                } else {
                     setVisibleError({
                         visible: true,
                         htmlE: <>Please, give the question</>

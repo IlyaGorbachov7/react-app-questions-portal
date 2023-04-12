@@ -11,6 +11,10 @@ export default class Requests {
         return JSON.parse(tokenString)
     }
 
+    static getTokenWithBearer() {
+        return 'Bearer ' + Requests.getToken();
+    }
+
     static async registration(registrationData) {
         const response = await ax.post("/users/register", registrationData);
         return response.data;

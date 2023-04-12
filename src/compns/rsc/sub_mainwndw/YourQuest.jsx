@@ -11,10 +11,14 @@ import {UserContext} from "../context";
 import ErrorModal from "../ErrrorModal";
 
 const YourQuest = () => {
-    const {userSession} = useContext(UserContext)
+    const {
+        userSession,
+        triggerOnAddUpdate, setTriggerOnAddUpdate,
+        sendQueryToUpdateStatementsUser
+    } = useContext(UserContext)
     const stoperLoop = useRef(0)
     // trigger чтобы  автоматически сработали нужные useEffect-ы
-    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
+    // const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
@@ -34,92 +38,6 @@ const YourQuest = () => {
     useEffect(() => {
         startSterilizationBtnActive("/questions/your")
     }, [stoperLoop])
-
-    let quests = [
-        {
-
-            id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "11111sldkfje3ds@gmail.com",
-            questionText: "Чемы бы ты хотел заниматся ?",
-            answerType: "Single line text",
-            answerText: " slkfjdslf232323",
-            options: null
-        },
-        {
-            id: "sldkfj lsdjgggflk jsdlf",
-            emailFromUser: userSession.email,
-            emailForUser: "22222sldkfjds@7gmail.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Combo box",
-            answerText: "fff",
-            options: "hfp\nxtnhst\nxnj\nfff"
-        },
-        {
-            id: "sldkfj lsdjfjhjflk jss",
-            emailFromUser: userSession.email,
-            emailForUser: "33333sldkfjds@gma8il.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323",
-            options: "slkfjdslf232323\nYOur\nNo"
-        },
-        {
-            id: "jsdlfk ghjghjjdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "4444444sldkfsdf@gmail.0com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Single line text",
-            answerText: " slkfjdslf232323",
-            options: null
-
-        },
-        {
-            id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "5555555sklkldkfjds@gmail.co7m",
-            questionText: "Your border ?",
-            answerType: "Date",
-            answerText: "2023-08-01",
-            options: null,
-        },
-        {
-            id: "sldkfj lsdjfl3q3233333jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "666666666sldkfjdssd@gmail7.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323",
-            options: "332\n242\n999",
-        },
-        {
-            id: "sldkfj lsdjflk 934557999999 fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "77777777773mail.c4om",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Multiline text",
-            answerText: "Что бы блять \n тваришь что же давай друг!!!",
-            options: null,
-        },
-        {
-            id: "eyug8980fvd",
-            emailFromUser: userSession.email,
-            emailForUser: "8888888888234ldkfjds@gmail.c0om",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Date",
-            answerText: "",
-            options: null,
-        },
-        {
-            id: "876865ff907089vdc",
-            emailFromUser: userSession.email,
-            emailForUser: "99999999999924455dkfjds@gvmail.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Radio button",
-            answerText: "",
-            options: " 1\n2\n3",
-        }
-    ]
 
     const [questions, setQuestions] = useState([])
     const [emails, setEmails] = useState([])
@@ -156,9 +74,9 @@ const YourQuest = () => {
             })
     }, [stoperLoop])
 
-    useEffect(()=>{
+    useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
-    },[totalCountRecord, curPage, viewLimitCount])
+    }, [totalCountRecord, curPage, viewLimitCount])
 
     async function loadCountYourQuestions() {
         try {
@@ -213,6 +131,9 @@ const YourQuest = () => {
                 if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
                     debugger
                     console.log(newQuest)
+                    // WebSocket
+                    sendQueryToUpdateStatementsUser(newQuest.emailForUser)
+                    // --------------
                     Requests.createQuestion(newQuest)
                         .then(r => {
                             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
