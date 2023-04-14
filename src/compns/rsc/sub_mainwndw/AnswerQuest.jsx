@@ -108,6 +108,7 @@ const AnswerQuest = () => {
                     debugger
                     Requests.answerTheQuestion(answeredQuest).then(r => {
                         sendQueryToUpdateStatementsUser(answeredQuest.emailFromUser)
+                        debugger
                         setTriggerOnAnswer(((triggerOnAnswer) ? false : true))
                         setVisibleAnswerTheQuest({
                             visible: false

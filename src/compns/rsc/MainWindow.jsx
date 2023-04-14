@@ -39,6 +39,7 @@ const MainWindow = () => {
     })
     const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
     const [triggerOnAnswer, setTriggerOnAnswer] = useState(true)
+
     const userName = useMemo(() => {
         let username = (userData.firstName + ' ' + userData.lastName).trim();
         if (username !== '') {
@@ -94,13 +95,22 @@ const MainWindow = () => {
         debugger
         let email = payload.body;
         console.log("Update statements current user ...>>>>>>> " + email)
-        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-        setTriggerOnAnswer((triggerOnAnswer) ? false : true)
+        if (triggerOnAddUpdate) {
+            setTriggerOnAddUpdate(false)
+        } else {
+            setTriggerOnAddUpdate(true)
+        }
+
+        if (triggerOnAnswer) {
+            setTriggerOnAnswer(false)
+        } else {
+            setTriggerOnAnswer(true)
+        }
     }
 
     function sendQueryToUpdateStatementsUser(email) {
-        debugger
-        stompClient.current.send("/app/private/update", {'Authorization': Requests.getTokenWithBearer()}, email)
+        // debugger
+        // stompClient.current.send("/app/private/update", JSON.parse(email))
     }
 
 
@@ -111,7 +121,8 @@ const MainWindow = () => {
         stompClient.current.subscribe('/topic/user/create', onCreatedUser, {'Authorization': Requests.getTokenWithBearer()})
         stompClient.current.subscribe('/topic/user/delete', onDeleteUser, {'Authorization': Requests.getTokenWithBearer()})
         // сервер будет присылать сообщение ТЕКУЩЕМУ ПОЛЬЗОВАТЕЛЮ ОТ Другого пользователя
-        stompClient.current.subscribe('/user/' + userEmail + '/update', onUpdateQuestions, {'Authorization': Requests.getTokenWithBearer()})
+        // stompClient.current.subscribe('/user/' + userEmail + '/update', onUpdateQuestions)
+        stompClient.current.subscribe('/topic/user/' + userEmail, onUpdateQuestions, {'Authorization': Requests.getTokenWithBearer()})
         setConnect(true)
     }
 
@@ -120,17 +131,10 @@ const MainWindow = () => {
             return new SockJS(WS_CROSS_ORIGIN)
         });
         // debugger
-        stompClient.current.connect({'Authorization': Requests.getTokenWithBearer()}, subscribeCurrentClient, function (err) {
-            // debugger
-            setVisibleAction({
-                visible: true, btnName: "Log In",
-                msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
-                    e.preventDefault()
-                    clearToken()
-                    navigate('/login')
-                }
-            })
-        });
+        let headers = {
+            Authorization: Requests.getTokenWithBearer()
+        }
+        stompClient.current.connect(headers, subscribeCurrentClient);
         // debugger
     }
 

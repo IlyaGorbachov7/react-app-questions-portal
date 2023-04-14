@@ -82,7 +82,6 @@ const YourQuest = () => {
         try {
             console.log("Запрос на КОЛИЧЕСТВО вопросов:")
             const count = await Requests.getTotalCountYourQuest();
-            debugger
             return count
         } catch (e) {
             console.log(e)
@@ -136,6 +135,7 @@ const YourQuest = () => {
                     // --------------
                     Requests.createQuestion(newQuest)
                         .then(r => {
+                            debugger
                             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
                             setVisibleAddQuest({
                                 visible: false
