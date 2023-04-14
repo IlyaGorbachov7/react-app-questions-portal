@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import '../styles/MainWindow.css'
 import {btnAnswerQuestMainWindowId, btnUserNameMainWindowId, btnYourQuestMainWindowId} from "../scripts/MainWindow";
 import {Navigate, Route, Routes, useNavigate} from "react-router";
@@ -14,6 +14,7 @@ import SockJS from 'sockjs-client'
 import {prepareHtmlMsgErrorTokenTimeExpired} from "../scripts/Registration";
 import ActionModal from "./ActionModal";
 import {WS_CROSS_ORIGIN} from "./api/RemoteServier";
+import {useDispatch, useSelector} from "react-redux";
 
 
 const MainWindow = () => {
@@ -37,8 +38,10 @@ const MainWindow = () => {
         lastName: "",
         phone: ""
     })
-    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
-    const [triggerOnAnswer, setTriggerOnAnswer] = useState(true)
+
+    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(false)
+    const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
+    const dispatch = useDispatch()
 
     const userName = useMemo(() => {
         let username = (userData.firstName + ' ' + userData.lastName).trim();
@@ -82,47 +85,34 @@ const MainWindow = () => {
         });
     }
 
+    function sendQueryToUpdateStatementsQuestionsUser(email) {
+        stompClient.current.send("/quest-portal/private/questions/crud", {}, JSON.stringify({email: email}))
+    }
 
-    function onCreatedUser() {
+    function sendQueryToUpdateStatementUser(email) {
+        stompClient.current.send("/quest-portal/public/users/crud", {}, JSON.stringify({email: email}))
+    }
+
+    function onUpdateStatementsUser() {
 
     }
 
-    function onDeleteUser() {
-
+    function onRegisterUser(payload) {
+        console.log("Update list emails ...>>>>>>>>> ")
+        dispatch({type: "UPDATE_USER_EMAIL"})
     }
 
-    function onUpdateQuestions(payload) {
+    function onCRUDQuestions(payload) {
         debugger
         let email = payload.body;
         console.log("Update statements current user ...>>>>>>> " + email)
-        if (triggerOnAddUpdate) {
-            setTriggerOnAddUpdate(false)
-        } else {
-            setTriggerOnAddUpdate(true)
-        }
+        dispatch({type: "UPDATE_QUEST"})
 
-        if (triggerOnAnswer) {
-            setTriggerOnAnswer(false)
-        } else {
-            setTriggerOnAnswer(true)
-        }
     }
-
-    function sendQueryToUpdateStatementsUser(email) {
-        // debugger
-        // stompClient.current.send("/app/private/update", JSON.parse(email))
-    }
-
 
     function subscribeCurrentClient() {
-        // debugger
-
-        // сервер будет присылать на ЭТИ URL мне сообщения!!!!!
-        stompClient.current.subscribe('/topic/user/create', onCreatedUser, {'Authorization': Requests.getTokenWithBearer()})
-        stompClient.current.subscribe('/topic/user/delete', onDeleteUser, {'Authorization': Requests.getTokenWithBearer()})
-        // сервер будет присылать сообщение ТЕКУЩЕМУ ПОЛЬЗОВАТЕЛЮ ОТ Другого пользователя
-        // stompClient.current.subscribe('/user/' + userEmail + '/update', onUpdateQuestions)
-        stompClient.current.subscribe('/topic/user/' + userEmail, onUpdateQuestions, {'Authorization': Requests.getTokenWithBearer()})
+        stompClient.current.subscribe('/public/users/crud', onRegisterUser, {'Authorization': Requests.getTokenWithBearer()})
+        stompClient.current.subscribe('/private/' + userEmail + '/question/crud', onCRUDQuestions, {'Authorization': Requests.getTokenWithBearer()})
         setConnect(true)
     }
 
@@ -130,12 +120,10 @@ const MainWindow = () => {
         stompClient.current = Stomp.over(function () {
             return new SockJS(WS_CROSS_ORIGIN)
         });
-        // debugger
         let headers = {
             Authorization: Requests.getTokenWithBearer()
         }
         stompClient.current.connect(headers, subscribeCurrentClient);
-        // debugger
     }
 
     return (
@@ -144,11 +132,12 @@ const MainWindow = () => {
             setUserSession: setUserData,
             isLoaded,
             getCurUser: getCurUser,
-            triggerOnAddUpdate,
+            triggerOnAddUpdate: triggerOnAddUpdate,
             setTriggerOnAddUpdate: setTriggerOnAddUpdate,
-            triggerOnAnswer,
+            triggerOnAnswer: triggerOnAnswer,
             setTriggerOnAnswer: setTriggerOnAnswer,
-            sendQueryToUpdateStatementsUser
+            sendQueryToUpdateStatementsQuestionsUser: sendQueryToUpdateStatementsQuestionsUser,
+            sendQueryToUpdateStatementUser: sendQueryToUpdateStatementUser,
         }}>
             {
                 (token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,

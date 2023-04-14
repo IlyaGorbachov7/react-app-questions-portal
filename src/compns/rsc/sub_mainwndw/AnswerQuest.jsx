@@ -4,20 +4,22 @@ import {UserContext} from "../context";
 import {useRef, useState} from "react";
 import {rangeViewHtml} from "../../scripts/sub_mainwndw/YourQuest";
 import Requests from "../api/Requests";
-import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
-import {Button} from "react-bootstrap";
-import RowQuestions from "./sub_questcmp/RowQuestions";
 import TablePaginationDemo from "./sub_questcmp/TableParinationDemo";
 import RowAnswerQuest from "./sub_questcmp/RowAnswerQuest";
 import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 import ErrorModal from "../ErrrorModal";
+import {useSelector} from "react-redux";
 
 const AnswerQuest = () => {
+    const trig = useSelector(state => state.updateQuestReducer)
     const {
-        userSession, sendQueryToUpdateStatementsUser,
-        triggerOnAnswer, setTriggerOnAnswer
+        userSession, sendQueryToUpdateStatementsQuestionsUser,
+        triggerOnAnswer, setTriggerOnAnswer,
     } = useContext(UserContext)
-    // const [triggerOnAnswer, setTriggerOnAnswer] = useState(false)
+    useEffect(() => {
+        console.log(triggerOnAnswer)
+        console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB ANSWER ")
+    }, [triggerOnAnswer])
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
@@ -53,15 +55,16 @@ const AnswerQuest = () => {
         loadCountAnswerQuestions().then(totalCount => {
             setTotalCountRecord(totalCount)
         })
-    }, [viewLimitCount, triggerOnAnswer])
+    }, [viewLimitCount, triggerOnAnswer, trig])
     useEffect(() => {
         // срабатывет 1 раз при загрузке после верхнего запроса
         // и запрос делает всегода, => получить порцию вопросов
         loadAnswerQuestions().then(quest => {
+            debugger
             console.log(quest)
             setQuestions(quest)
         })
-    }, [viewLimitCount, curPage, triggerOnAnswer])
+    }, [viewLimitCount, curPage, triggerOnAnswer, trig])
     useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
     }, [totalCountRecord, curPage, viewLimitCount])
@@ -105,9 +108,8 @@ const AnswerQuest = () => {
                 // делаем запрос в сервер, что на вопрос мы ответили
                 if (answeredQuest.answerText !== "") {
                     console.log(answeredQuest)
-                    debugger
                     Requests.answerTheQuestion(answeredQuest).then(r => {
-                        sendQueryToUpdateStatementsUser(answeredQuest.emailFromUser)
+                        sendQueryToUpdateStatementsQuestionsUser(answeredQuest.emailFromUser)
                         debugger
                         setTriggerOnAnswer(((triggerOnAnswer) ? false : true))
                         setVisibleAnswerTheQuest({

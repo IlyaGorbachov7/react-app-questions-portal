@@ -9,13 +9,22 @@ import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
 import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
 import {UserContext} from "../context";
 import ErrorModal from "../ErrrorModal";
+import {useSelector} from "react-redux";
 
 const YourQuest = () => {
+    const trig = useSelector(state => state.updateQuestReducer)
+    const trigUpdateListEmails = useSelector(state => state.updateUserEmailReducer)
+
     const {
         userSession,
         triggerOnAddUpdate, setTriggerOnAddUpdate,
-        sendQueryToUpdateStatementsUser
+        sendQueryToUpdateStatementsQuestionsUser,
     } = useContext(UserContext)
+
+    useEffect(() => {
+        console.log(triggerOnAddUpdate)
+        console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY YOUTR")
+    }, [triggerOnAddUpdate])
     const stoperLoop = useRef(0)
     // trigger чтобы  автоматически сработали нужные useEffect-ы
     // const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
@@ -52,9 +61,10 @@ const YourQuest = () => {
     useEffect(() => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountYourQuestions().then(totalCount => {
+            debugger
             setTotalCountRecord(totalCount)
         })
-    }, [viewLimitCount, triggerOnAddUpdate])
+    }, [viewLimitCount, triggerOnAddUpdate, trig])
     useEffect(() => {
         // срабатывет 1 раз при загрузке после верхнего запроса
         // и запрос делает всегода, => получить порцию вопросов
@@ -62,17 +72,20 @@ const YourQuest = () => {
             console.log(quest)
             setQuestions(quest)
         })
-    }, [viewLimitCount, curPage, triggerOnAddUpdate])
+    }, [viewLimitCount, curPage, triggerOnAddUpdate, trig])
     useEffect(() => {
         loadAllEmailsUsers()
             .then(r => {
                 setEmails(r)
             })
+    }, [stoperLoop,trigUpdateListEmails])
+
+    useEffect(() => {
         loadAnswerTypes()
             .then(r => {
                 setAnswerTypes(r)
             })
-    }, [stoperLoop])
+    },[stoperLoop])
 
     useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
@@ -130,12 +143,10 @@ const YourQuest = () => {
                 if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
                     debugger
                     console.log(newQuest)
-                    // WebSocket
-                    sendQueryToUpdateStatementsUser(newQuest.emailForUser)
-                    // --------------
                     Requests.createQuestion(newQuest)
                         .then(r => {
                             debugger
+                            sendQueryToUpdateStatementsQuestionsUser(newQuest.emailForUser)
                             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
                             setVisibleAddQuest({
                                 visible: false
@@ -168,6 +179,7 @@ const YourQuest = () => {
             callbackAction: (updatedQuest) => {
                 debugger
                 Requests.updateQuestion(updatedQuest).then(r => {
+                    sendQueryToUpdateStatementsQuestionsUser(updatedQuest.emailForUser)
                     setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
                     setVisibleUpdateQuest({
                         visible: false
@@ -177,9 +189,10 @@ const YourQuest = () => {
         })
     }
 
-    function deleteQuestion(id) {
+    function deleteQuestion(id, emailForUser) {
         console.log("Question this id: " + id + " is deleted")
         Requests.deleteQuestion(id).then(r => {
+            sendQueryToUpdateStatementsQuestionsUser(emailForUser)
             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
         })
     }
