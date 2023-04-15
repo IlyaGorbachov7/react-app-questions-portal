@@ -15,6 +15,7 @@ import {prepareHtmlMsgErrorTokenTimeExpired} from "../scripts/Registration";
 import ActionModal from "./ActionModal";
 import {WS_CROSS_ORIGIN} from "./api/RemoteServier";
 import {useDispatch, useSelector} from "react-redux";
+import {private_excludeVariablesFromRoot} from "@mui/material";
 
 
 const MainWindow = () => {
@@ -25,18 +26,12 @@ const MainWindow = () => {
     let stompClient = React.useRef(null);
 
     const [visibleAction, setVisibleAction] = useState({
-        visible: false,
-        btnName: "",
-        msgAction: "",
-        callbackAction: () => {
+        visible: false, btnName: "", msgAction: "", callbackAction: () => {
         }
     })
     const [isLoaded, setIsLoaded] = useState(false)
     const [userData, setUserData] = useState({
-        email: "",
-        firstName: "",
-        lastName: "",
-        phone: ""
+        email: "", firstName: "", lastName: "", phone: ""
     })
 
     const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(false)
@@ -74,8 +69,10 @@ const MainWindow = () => {
         }).catch((err) => {
             if (err.response.status === 401) { // если токин есть, но время истекло, тогда просим, чтобы он занова перезашел
                 setVisibleAction({
-                    visible: true, btnName: "Log In",
-                    msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                    visible: true,
+                    btnName: "Log In",
+                    msgAction: prepareHtmlMsgErrorTokenTimeExpired(),
+                    callbackAction: (e) => {
                         e.preventDefault()
                         clearToken()
                         navigate('/login')
@@ -93,27 +90,33 @@ const MainWindow = () => {
         stompClient.current.send("/quest-portal/public/users/crud", {}, JSON.stringify({email: email}))
     }
 
-    function onUpdateStatementsUser() {
+    const messageSubscriberOnUser = useRef(new Map())
 
-    }
-
-    function onRegisterUser(payload) {
-        console.log("Update list emails ...>>>>>>>>> ")
-        dispatch({type: "UPDATE_USER_EMAIL"})
-    }
-
-    function onCRUDQuestions(payload) {
+    function subscribeOnUser(emailFor) {
         debugger
-        let email = payload.body;
-        console.log("Update statements current user ...>>>>>>> " + email)
-        dispatch({type: "UPDATE_QUEST"})
-
+        messageSubscriberOnUser.current.set(emailFor, stompClient.current.subscribe("/private/user/" + emailFor, onSubscribeAction));
     }
 
-    function subscribeCurrentClient() {
-        stompClient.current.subscribe('/public/users/crud', onRegisterUser, {'Authorization': Requests.getTokenWithBearer()})
-        stompClient.current.subscribe('/private/' + userEmail + '/question/crud', onCRUDQuestions, {'Authorization': Requests.getTokenWithBearer()})
-        setConnect(true)
+    function unSubscribeOnUser(emailFor) {
+        debugger
+        messageSubscriberOnUser.current.get(emailFor).unsubscribe()
+        messageSubscriberOnUser.current.delete(emailFor)
+    }
+    function subscribeOnPrivateCanal(emailSelf){
+        messageSubscriberOnUser.current.set(emailSelf, stompClient.current.subscribe('/private/' + emailSelf + '/question/crud', onCRUDQuestions, {'Authorization': Requests.getTokenWithBearer()}))
+    }
+
+    function onSubscribeAction(payload) {
+        debugger
+        let emailObj = JSON.parse(payload.body);
+
+        if (emailObj.prevEmail !== emailObj.newEmail) {
+            if (messageSubscriberOnUser.current.has(emailObj.prevEmail)) {
+                unSubscribeOnUser(emailObj.prevEmail)
+                subscribeOnUser(emailObj.newEmail)
+            }
+        }
+        dispatch({type: "UPDATE_QUEST"})
     }
 
     function connection() {
@@ -126,105 +129,126 @@ const MainWindow = () => {
         stompClient.current.connect(headers, subscribeCurrentClient);
     }
 
-    return (
-        <UserContext.Provider value={{
-            userSession: userData,
-            setUserSession: setUserData,
-            isLoaded,
-            getCurUser: getCurUser,
-            triggerOnAddUpdate: triggerOnAddUpdate,
-            setTriggerOnAddUpdate: setTriggerOnAddUpdate,
-            triggerOnAnswer: triggerOnAnswer,
-            setTriggerOnAnswer: setTriggerOnAnswer,
-            sendQueryToUpdateStatementsQuestionsUser: sendQueryToUpdateStatementsQuestionsUser,
-            sendQueryToUpdateStatementUser: sendQueryToUpdateStatementUser,
-        }}>
-            {
-                (token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,
-                        // получится непрырываня цепочка, так как данные еще не загружены
-                        (isLoaded)
-                            ?
-                            <div className="container mt-2">
-                                <div className="d-flex p-1 block-shadow-color main-bar-border-radius"
-                                     style={{minWidth: "720px"}}>
-                                    <div className="me-lg-auto font-weight-600 font-bar-size">
-                                        <span className="color-text-logo">LOGO</span><span
-                                        className="color-text-type">TYPE</span>
-                                    </div>
-                                    <div className="btn-group" role="group">
-                                        <button id={btnYourQuestMainWindowId} className="btn me-5 btn-panel-style "
-                                                type="button"
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    navigate('/main-window/questions/your', {})
-                                                }}>Your questions
-                                        </button>
-                                        <button id={btnAnswerQuestMainWindowId} className="btn ms-5 btn-panel-style"
-                                                type="button"
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    navigate('/main-window/questions/answer')
-                                                }}>Answer the questions
-                                        </button>
-                                        <div id="btnGroupMainWindowId" className="btn-group ms-5">
-                                            <button id={btnUserNameMainWindowId} type="button"
-                                                    className="btn dropdown-toggle btn-panel-style font-weight-600"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                {userName}
-                                            </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <button id="btnEditProfileMainWindowId"
-                                                            className="dropdown-item btn-dropdown"
-                                                            type="button" onClick={() => {
-                                                        navigate('/main-window/profile/edit')
-                                                    }}>Edit Profile
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button id="btnLogOutMainWindowId"
-                                                            className="dropdown-item btn-dropdown"
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.preventDefault()
-                                                                clearToken()
-                                                                navigate("/")
-                                                            }}>Log Out
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button id="btnDeleteProfileMainWindowId" type="button"
-                                                            className="dropdown-item btn-dropdown" style={{color: "red"}}
-                                                            onClick={(e) => {
-                                                                e.preventDefault()
-                                                                navigate('/main-window/profile/delete')
-                                                            }}>Delete
-                                                        Profile
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <Routes children='/main-window'>
-                                    <Route path='/questions/your' element={<YourQuest/>}/>
-                                    <Route path='/questions/answer' element={<AnswerQuest/>}/>
-                                    <Route path='/profile/delete' element={<DeleteProfile/>}/>
-                                    <Route path='/profile/edit' element={<EditProfile/>}/>
-                                    <Route path="*" element={<Navigate to={'/error-page'}/>}/>
-                                </Routes>
-                            </div>
-                            :
-                            <>
-                                <ActionModal visibleAction={visibleAction} setVisibleAction={setVisibleAction}/>
-                            </>)
-                    : (<Routes children='/main-window'>
-                        <Route path="*" element={<Navigate to={'/login'}/>}/>
-                    </Routes>)
+    function subscribeCurrentClient() {
+        stompClient.current.subscribe('/public/users/crud', onRegisterUser, {'Authorization': Requests.getTokenWithBearer()})
+        subscribeOnPrivateCanal(userEmail)
+        Requests.getAllYourQuestions().then(quests => {
+            let subscribersEmails = new Set(quests.map(quest => quest.emailForUser))
 
-            }
-        </UserContext.Provider>
-    );
+            subscribersEmails.forEach(emailFor => {
+                subscribeOnUser(emailFor)
+            })
+        })
+        setConnect(true)
+    }
+
+    function onRegisterUser() {
+        console.log("Update list emails ...>>>>>>>>> ")
+        dispatch({type: "UPDATE_USER_EMAIL"})
+    }
+
+    function onCRUDQuestions(payload) {
+        debugger
+        let email = payload.body;
+        console.log("Update statements current user ...>>>>>>> " + email)
+        dispatch({type: "UPDATE_QUEST"})
+
+    }
+
+    return (<UserContext.Provider value={{
+        userSession: userData,
+        setUserSession: setUserData,
+        isLoaded,
+        getCurUser: getCurUser,
+        triggerOnAddUpdate: triggerOnAddUpdate,
+        setTriggerOnAddUpdate: setTriggerOnAddUpdate,
+        triggerOnAnswer: triggerOnAnswer,
+        setTriggerOnAnswer: setTriggerOnAnswer,
+        sendQueryToUpdateStatementsQuestionsUser: sendQueryToUpdateStatementsQuestionsUser,
+        sendQueryToUpdateStatementUser: sendQueryToUpdateStatementUser,
+        subscribeOnUser: subscribeOnUser,
+        unSubscribeOnUser: unSubscribeOnUser,
+        subscribeOnPrivateCanal: subscribeOnPrivateCanal
+    }}>
+        {(token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,
+            // получится непрырываня цепочка, так как данные еще не загружены
+            (isLoaded) ? <div className="container mt-2">
+                <div className="d-flex p-1 block-shadow-color main-bar-border-radius"
+                     style={{minWidth: "720px"}}>
+                    <div className="me-lg-auto font-weight-600 font-bar-size">
+                        <span className="color-text-logo">LOGO</span><span
+                        className="color-text-type">TYPE</span>
+                    </div>
+                    <div className="btn-group" role="group">
+                        <button id={btnYourQuestMainWindowId} className="btn me-5 btn-panel-style "
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    navigate('/main-window/questions/your', {})
+                                }}>Your questions
+                        </button>
+                        <button id={btnAnswerQuestMainWindowId} className="btn ms-5 btn-panel-style"
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    navigate('/main-window/questions/answer')
+                                }}>Answer the questions
+                        </button>
+                        <div id="btnGroupMainWindowId" className="btn-group ms-5">
+                            <button id={btnUserNameMainWindowId} type="button"
+                                    className="btn dropdown-toggle btn-panel-style font-weight-600"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                {userName}
+                            </button>
+                            <ul className="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button id="btnEditProfileMainWindowId"
+                                            className="dropdown-item btn-dropdown"
+                                            type="button" onClick={() => {
+                                        navigate('/main-window/profile/edit')
+                                    }}>Edit Profile
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="btnLogOutMainWindowId"
+                                            className="dropdown-item btn-dropdown"
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                clearToken()
+                                                navigate("/")
+                                            }}>Log Out
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="btnDeleteProfileMainWindowId" type="button"
+                                            className="dropdown-item btn-dropdown" style={{color: "red"}}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                navigate('/main-window/profile/delete')
+                                            }}>Delete
+                                        Profile
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <Routes children='/main-window'>
+                    <Route path='/questions/your' element={<YourQuest/>}/>
+                    <Route path='/questions/answer' element={<AnswerQuest/>}/>
+                    <Route path='/profile/delete' element={<DeleteProfile/>}/>
+                    <Route path='/profile/edit' element={<EditProfile/>}/>
+                    <Route path="*" element={<Navigate to={'/error-page'}/>}/>
+                </Routes>
+            </div> : <>
+                <ActionModal visibleAction={visibleAction} setVisibleAction={setVisibleAction}/>
+            </>) : (<Routes children='/main-window'>
+            <Route path="*" element={<Navigate to={'/login'}/>}/>
+        </Routes>)
+
+        }
+    </UserContext.Provider>);
 };
 
 export default MainWindow;

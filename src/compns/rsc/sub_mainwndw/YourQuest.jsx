@@ -19,6 +19,8 @@ const YourQuest = () => {
         userSession,
         triggerOnAddUpdate, setTriggerOnAddUpdate,
         sendQueryToUpdateStatementsQuestionsUser,
+        subscribeOnUser,
+        unSubscribeOnUser
     } = useContext(UserContext)
 
     useEffect(() => {
@@ -70,6 +72,7 @@ const YourQuest = () => {
         // и запрос делает всегода, => получить порцию вопросов
         loadYourQuestion().then(quest => {
             console.log(quest)
+
             setQuestions(quest)
         })
     }, [viewLimitCount, curPage, triggerOnAddUpdate, trig])
@@ -78,14 +81,14 @@ const YourQuest = () => {
             .then(r => {
                 setEmails(r)
             })
-    }, [stoperLoop,trigUpdateListEmails])
+    }, [stoperLoop, trigUpdateListEmails])
 
     useEffect(() => {
         loadAnswerTypes()
             .then(r => {
                 setAnswerTypes(r)
             })
-    },[stoperLoop])
+    }, [stoperLoop])
 
     useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
@@ -143,6 +146,11 @@ const YourQuest = () => {
                 if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
                     debugger
                     console.log(newQuest)
+                    Requests.getCountQuestFromToForUser(newQuest.emailForUser).then(count => {
+                        if (count === 0) {
+                            subscribeOnUser(newQuest.emailForUser)
+                        }
+                    })
                     Requests.createQuestion(newQuest)
                         .then(r => {
                             debugger
@@ -151,6 +159,7 @@ const YourQuest = () => {
                             setVisibleAddQuest({
                                 visible: false
                             })
+
                         })
                 } else {
                     setVisibleError({
@@ -192,8 +201,15 @@ const YourQuest = () => {
     function deleteQuestion(id, emailForUser) {
         console.log("Question this id: " + id + " is deleted")
         Requests.deleteQuestion(id).then(r => {
-            sendQueryToUpdateStatementsQuestionsUser(emailForUser)
             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+            sendQueryToUpdateStatementsQuestionsUser(emailForUser)
+            debugger
+            Requests.getCountQuestFromToForUser(emailForUser).then(count => {
+                debugger
+                if (count === 0) {
+                    unSubscribeOnUser()
+                }
+            })
         })
     }
 

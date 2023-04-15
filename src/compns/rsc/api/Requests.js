@@ -139,6 +139,16 @@ export default class Requests {
         return response.data;
     }
 
+    static async getCountQuestFromToForUser(forUser) {
+        const response = await ax.get("/questions/from-me/" + forUser + "/quantity", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        debugger
+        return response.data;
+    }
+
     static async getAllYourQuestions() {
         const response = await ax.get("/questions/from-me/all", {
             headers: {
