@@ -11,6 +11,10 @@ export default class Requests {
         return JSON.parse(tokenString)
     }
 
+    static getTokenWithBearer() {
+        return 'Bearer ' + Requests.getToken();
+    }
+
     static async registration(registrationData) {
         const response = await ax.post("/users/register", registrationData);
         return response.data;
@@ -132,6 +136,16 @@ export default class Requests {
                 Authorization: "Bearer " + this.getToken()
             }
         })
+        return response.data;
+    }
+
+    static async getCountQuestFromToForUser(forUser) {
+        const response = await ax.get("/questions/from-me/" + forUser + "/quantity", {
+            headers: {
+                Authorization: "Bearer " + this.getToken()
+            }
+        })
+        debugger
         return response.data;
     }
 

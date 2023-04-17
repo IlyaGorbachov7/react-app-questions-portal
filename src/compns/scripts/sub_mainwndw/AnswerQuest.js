@@ -111,9 +111,9 @@ export const prepareAnswerText = (nameAnswerType, dataRetriever) => {
     } else if (ANSWER_TYPES[2] === nameAnswerType) { // Date
         return dataRetriever.answerText;
     } else if (ANSWER_TYPES[3] === nameAnswerType) { // Radio button
-        return dataRetriever.answerText[0]
+        return dataRetriever.answerText
     } else if (ANSWER_TYPES[4] === nameAnswerType) { // Combo box
-        return dataRetriever.answerText[0]
+        return dataRetriever.answerText
     } else if (ANSWER_TYPES[5] === nameAnswerType) { // Check box
         return dataRetriever.answerText.join('\n')
     }

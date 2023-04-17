@@ -4,13 +4,15 @@ import {Button, Modal} from "react-bootstrap";
 import {ANSWER_TYPES} from "../../../scripts/sub_mainwndw/AnswerQuest";
 
 const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answerTypes}) => {
-    useEffect(() => {
-        emails = emails.sort();
-        answerTypes = answerTypes.sort((at, at1) => {
-            return (at.id < at1.id) ? -1 : (at.id > at1.id) ? 1 : 0
-        })
-    })
+    const [stopLoop, setStopLoop] = useState(0)
     const [editQuest, setEditQuest] = useState({...visibleUpdateQuest.questOnUpdate}); // обязательно удаляем ОТВЕТ на этот проврос, если этот вопрос мы захотели изменить
+
+    useEffect(() => {
+        if (visibleUpdateQuest.questOnUpdate.emailForUser === null) {
+            setEditQuest({...visibleUpdateQuest.questOnUpdate, emailForUser: (emails.length > 0) ? emails[0] : ""})
+        }
+        debugger
+    }, [stopLoop])
 
     function handlerBtnUpdateQuest(e) {
         e.preventDefault()
@@ -41,8 +43,9 @@ const EditPanelQuest = ({visibleUpdateQuest, setVisibleUpdateQuest, emails, answ
                                         setEditQuest({...editQuest, emailForUser: e.target.value})
                                     }}>
                             {emails.map((email) => {
+                                debugger
                                 return (
-                                    <option key={email} selected={(editQuest.email == email)} value={email}>
+                                    <option key={email} selected={(editQuest.emailForUser == email)} value={email}>
                                         {email}
                                     </option>)
                             })}

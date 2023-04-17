@@ -11,7 +11,10 @@ import {UserContext} from "../context";
 const EditProfile = () => {
     const [token, setToken, clearToken] = useToken();
     const navigate = useNavigate()
-    const {userSession, getCurUser} = useContext(UserContext);
+    const {
+        userSession, getCurUser,
+        subscribeOnPrivateCanal, unSubscribeOnUser
+    } = useContext(UserContext);
 
     const [editData, setEditData] = useState({
         email: "",
@@ -50,10 +53,14 @@ const EditProfile = () => {
             debugger
             const data = await Requests.updateCurUser(editData);
             console.log(data)
-            if(data.token !== null){ // back возвращает null, если email или password не были изменины!
+            if (data.token !== null) { // back возвращает null, если email или password не были изменины!
                 setToken(data.token)
             }
             setVisibleError({htmlE: prepareHtmlRequestMsg({message: data.message}), visible: true})
+            if (editData.email !== userSession.email) {
+                unSubscribeOnUser(userSession.email)
+                subscribeOnPrivateCanal(editData.email)
+            }
             getCurUser(); // эта фаункция определена в MainWindow, она сделает запрос на back и обнавит userSession
         } catch (err) {
             if (err.response.status === 401) {

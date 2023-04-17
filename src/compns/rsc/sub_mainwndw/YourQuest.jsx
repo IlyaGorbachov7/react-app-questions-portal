@@ -9,12 +9,29 @@ import AddPanelYourQuestion from "./sub_questcmp/AddPanelYourQuestion";
 import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
 import {UserContext} from "../context";
 import ErrorModal from "../ErrrorModal";
+import {useSelector} from "react-redux";
 
 const YourQuest = () => {
-    const {userSession} = useContext(UserContext)
+    const trig = useSelector(state => state.updateQuestReducer)
+    const trigUpdateListEmails = useSelector(state => state.updateUserEmailReducer)
+
+    const {
+        userSession,
+        triggerOnAddUpdate, setTriggerOnAddUpdate,
+        sendQueryToUpdateStatementsQuestionsUser,
+        subscribeOnUser,
+        unSubscribeOnUser,
+        sendQueryToSubscribeMe,
+        sendQueryToUnsubscribeMe
+    } = useContext(UserContext)
+
+    useEffect(() => {
+        console.log(triggerOnAddUpdate)
+        console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY YOUTR")
+    }, [triggerOnAddUpdate])
     const stoperLoop = useRef(0)
     // trigger чтобы  автоматически сработали нужные useEffect-ы
-    const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
+    // const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
@@ -35,92 +52,6 @@ const YourQuest = () => {
         startSterilizationBtnActive("/questions/your")
     }, [stoperLoop])
 
-    let quests = [
-        {
-
-            id: "sldkfj lsdjflk skkjsdlfk jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "11111sldkfje3ds@gmail.com",
-            questionText: "Чемы бы ты хотел заниматся ?",
-            answerType: "Single line text",
-            answerText: " slkfjdslf232323",
-            options: null
-        },
-        {
-            id: "sldkfj lsdjgggflk jsdlf",
-            emailFromUser: userSession.email,
-            emailForUser: "22222sldkfjds@7gmail.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Combo box",
-            answerText: "fff",
-            options: "hfp\nxtnhst\nxnj\nfff"
-        },
-        {
-            id: "sldkfj lsdjfjhjflk jss",
-            emailFromUser: userSession.email,
-            emailForUser: "33333sldkfjds@gma8il.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323",
-            options: "slkfjdslf232323\nYOur\nNo"
-        },
-        {
-            id: "jsdlfk ghjghjjdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "4444444sldkfsdf@gmail.0com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Single line text",
-            answerText: " slkfjdslf232323",
-            options: null
-
-        },
-        {
-            id: "sldkfj lsdjferytrlkwwe jsdlfk jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "5555555sklkldkfjds@gmail.co7m",
-            questionText: "Your border ?",
-            answerType: "Date",
-            answerText: "2023-08-01",
-            options: null,
-        },
-        {
-            id: "sldkfj lsdjfl3q3233333jdslk fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "666666666sldkfjdssd@gmail7.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Check box",
-            answerText: " slkfjdslf232323",
-            options: "332\n242\n999",
-        },
-        {
-            id: "sldkfj lsdjflk 934557999999 fjs",
-            emailFromUser: userSession.email,
-            emailForUser: "77777777773mail.c4om",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Multiline text",
-            answerText: "Что бы блять \n тваришь что же давай друг!!!",
-            options: null,
-        },
-        {
-            id: "eyug8980fvd",
-            emailFromUser: userSession.email,
-            emailForUser: "8888888888234ldkfjds@gmail.c0om",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Date",
-            answerText: "",
-            options: null,
-        },
-        {
-            id: "876865ff907089vdc",
-            emailFromUser: userSession.email,
-            emailForUser: "99999999999924455dkfjds@gvmail.com",
-            questionText: "Wlkjfsdlfkjsflk kjfd?",
-            answerType: "Radio button",
-            answerText: "",
-            options: " 1\n2\n3",
-        }
-    ]
-
     const [questions, setQuestions] = useState([])
     const [emails, setEmails] = useState([])
     const [answerTypes, setAnswerTypes] = useState([])
@@ -134,37 +65,41 @@ const YourQuest = () => {
     useEffect(() => {
         // запрос в 1 раз и каждый раз как изменится viewListCount
         loadCountYourQuestions().then(totalCount => {
+            debugger
             setTotalCountRecord(totalCount)
         })
-    }, [viewLimitCount, triggerOnAddUpdate])
+    }, [viewLimitCount, triggerOnAddUpdate, trig])
     useEffect(() => {
         // срабатывет 1 раз при загрузке после верхнего запроса
         // и запрос делает всегода, => получить порцию вопросов
         loadYourQuestion().then(quest => {
             console.log(quest)
+
             setQuestions(quest)
         })
-    }, [viewLimitCount, curPage, triggerOnAddUpdate])
+    }, [viewLimitCount, curPage, triggerOnAddUpdate, trig])
     useEffect(() => {
         loadAllEmailsUsers()
             .then(r => {
                 setEmails(r)
             })
+    }, [stoperLoop, trigUpdateListEmails])
+
+    useEffect(() => {
         loadAnswerTypes()
             .then(r => {
                 setAnswerTypes(r)
             })
     }, [stoperLoop])
 
-    useEffect(()=>{
+    useEffect(() => {
         setPrintRange(rangeViewHtml(viewLimitCount, totalCountRecord, curPage, Math.ceil(totalCountRecord / viewLimitCount)))
-    },[totalCountRecord, curPage, viewLimitCount])
+    }, [totalCountRecord, curPage, viewLimitCount])
 
     async function loadCountYourQuestions() {
         try {
             console.log("Запрос на КОЛИЧЕСТВО вопросов:")
             const count = await Requests.getTotalCountYourQuest();
-            debugger
             return count
         } catch (e) {
             console.log(e)
@@ -213,13 +148,23 @@ const YourQuest = () => {
                 if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
                     debugger
                     console.log(newQuest)
-                    Requests.createQuestion(newQuest)
-                        .then(r => {
-                            setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-                            setVisibleAddQuest({
-                                visible: false
+                    Requests.getCountQuestFromToForUser(newQuest.emailForUser).then(count => {
+                        if (count === 0) {
+                            subscribeOnUser(newQuest.emailForUser)
+                            sendQueryToSubscribeMe(newQuest.emailFromUser, newQuest.emailForUser)
+                        }
+
+                        Requests.createQuestion(newQuest)
+                            .then(r => {
+                                debugger
+                                sendQueryToUpdateStatementsQuestionsUser(newQuest.emailForUser)
+                                setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                                setVisibleAddQuest({
+                                    visible: false
+                                })
+
                             })
-                        })
+                    })
                 } else {
                     setVisibleError({
                         visible: true,
@@ -232,7 +177,6 @@ const YourQuest = () => {
     }
 
     function updateQuestion(quest) {
-        console.log("Запусаем оно для обнавленя для вопроса" + "и там проводим разнового рода операции")
         setVisibleUpdateQuest({
             visible: true,
             questOnUpdate: {
@@ -247,6 +191,18 @@ const YourQuest = () => {
             callbackAction: (updatedQuest) => {
                 debugger
                 Requests.updateQuestion(updatedQuest).then(r => {
+                    debugger
+                    sendQueryToUpdateStatementsQuestionsUser(updatedQuest.emailForUser)
+                    if (quest.emailForUser !== updatedQuest.emailForUser) { // in case if user change forUser, then needed notify old user to update your list queston
+                        sendQueryToUpdateStatementsQuestionsUser(quest.emailForUser)
+                        Requests.getCountQuestFromToForUser(updatedQuest.emailForUser).then(count => {
+                            if (count === 0) {
+                                debugger
+                                subscribeOnUser(updatedQuest.emailForUser)
+                                sendQueryToSubscribeMe(updatedQuest.emailFromUser, updatedQuest.emailForUser)
+                            }
+                        })
+                    }
                     setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
                     setVisibleUpdateQuest({
                         visible: false
@@ -256,10 +212,19 @@ const YourQuest = () => {
         })
     }
 
-    function deleteQuestion(id) {
+    function deleteQuestion(id, emailForUser, emailFromUser) {
         console.log("Question this id: " + id + " is deleted")
         Requests.deleteQuestion(id).then(r => {
             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+            sendQueryToUpdateStatementsQuestionsUser(emailForUser)
+            debugger
+            Requests.getCountQuestFromToForUser(emailForUser).then(count => {
+                debugger
+                if (count === 0) {
+                    unSubscribeOnUser(emailForUser)
+                    sendQueryToUnsubscribeMe(emailFromUser, emailForUser)
+                }
+            })
         })
     }
 
