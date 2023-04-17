@@ -4,7 +4,7 @@ const RowQuestions = ({q, deleteCallback, updateCallback, ...props}) => {
 
     function deleteQuest(e) {
         e.preventDefault()
-        deleteCallback(q.id, q.emailForUser)
+        deleteCallback(q.id, q.emailForUser, q.emailFromUser)
     }
 
     function editQuest(e) {

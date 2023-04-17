@@ -86,6 +86,25 @@ const MainWindow = () => {
         stompClient.current.send("/quest-portal/private/questions/crud", {}, JSON.stringify({email: email}))
     }
 
+    /**
+     * Отправляем ему сообщение на подлкючение
+     */
+    function sendQueryToSubscribeMe(emailFrom, emailFor) {
+        debugger
+        stompClient.current.send('/quest-portal/private/user/subscribe-me', {}, JSON.stringify({
+            fromEmail: emailFrom,
+            forEmail: emailFor
+        }));
+    }
+
+    function sendQueryToUnsubscribeMe(emailFrom, emailFor) {
+        debugger
+        stompClient.current.send('/quest-portal/private/user/unsubscribe-me', {}, JSON.stringify({
+            fromEmail: emailFrom,
+            forEmail: emailFor
+        }))
+    }
+
     function sendQueryToUpdateStatementUser(email) {
         stompClient.current.send("/quest-portal/public/users/crud", {}, JSON.stringify({email: email}))
     }
@@ -97,13 +116,52 @@ const MainWindow = () => {
         messageSubscriberOnUser.current.set(emailFor, stompClient.current.subscribe("/private/user/" + emailFor, onSubscribeAction));
     }
 
+    const messageSubscriberOnFromUser = useRef(new Map())
+
+    function subscribeOnFromUser(emailFrom) {
+        debugger
+        messageSubscriberOnFromUser.current.set(emailFrom, stompClient.current.subscribe('/private/user/' + emailFrom + '', onAnswerQuestion))
+    }
+
+
+    function onAnswerQuestion(payload) {
+        debugger
+        let emailObj = JSON.parse(payload.body);
+
+        if (emailObj.prevEmail !== emailObj.newEmail) {
+            if (messageSubscriberOnFromUser.current.has(emailObj.prevEmail)) {
+                unSubscribeAnswerOnUser(emailObj.prevEmail)
+                subscribeOnFromUser(emailObj.newEmail)
+            }
+        }
+        dispatch({type: "UPDATE_QUEST"})
+    }
+
+    function unSubscribeAnswerOnUser(emailFrom) {
+        debugger
+        if (messageSubscriberOnFromUser.current.has(emailFrom)) {
+            messageSubscriberOnFromUser.current.get(emailFrom).unsubscribe()
+            messageSubscriberOnFromUser.current.delete(emailFrom)
+        }
+    }
+
+    function onSubscribeFrom(payload) {
+        let emailFromForData = JSON.parse(payload.body)
+        subscribeOnFromUser(emailFromForData.fromEmail)
+    }
+
+    function onUnSubscribeFrom(payload) {
+        debugger
+        let emailFromForData = JSON.parse(payload.body)
+        unSubscribeAnswerOnUser(emailFromForData.fromEmail)
+    }
+
     function unSubscribeOnUser(emailFor) {
         debugger
-        messageSubscriberOnUser.current.get(emailFor).unsubscribe()
-        messageSubscriberOnUser.current.delete(emailFor)
-    }
-    function subscribeOnPrivateCanal(emailSelf){
-        messageSubscriberOnUser.current.set(emailSelf, stompClient.current.subscribe('/private/' + emailSelf + '/question/crud', onCRUDQuestions, {'Authorization': Requests.getTokenWithBearer()}))
+        if (messageSubscriberOnUser.current.has(emailFor)) {
+            messageSubscriberOnUser.current.get(emailFor).unsubscribe()
+            messageSubscriberOnUser.current.delete(emailFor)
+        }
     }
 
     function onSubscribeAction(payload) {
@@ -119,6 +177,16 @@ const MainWindow = () => {
         dispatch({type: "UPDATE_QUEST"})
     }
 
+    function subscribeOnPrivateCanal(emailSelf) {
+        messageSubscriberOnUser.current.set(emailSelf, stompClient.current.subscribe('/private/' + emailSelf + '/question/crud', onCRUDQuestions))
+        // пользователь получает сообещине из сервера от другого человека, чтобы этот пользоваель подписался на неого
+        stompClient.current.subscribe('/private/' + emailSelf + '/subscribe-me', onSubscribeFrom)
+        stompClient.current.subscribe('/private/' + emailSelf + '/unsubscribe-me', onUnSubscribeFrom)
+    }
+
+    /**
+     * ________________________________________________________________________________________________________________________________
+     */
     function connection() {
         stompClient.current = Stomp.over(function () {
             return new SockJS(WS_CROSS_ORIGIN)
@@ -130,13 +198,20 @@ const MainWindow = () => {
     }
 
     function subscribeCurrentClient() {
-        stompClient.current.subscribe('/public/users/crud', onRegisterUser, {'Authorization': Requests.getTokenWithBearer()})
+        stompClient.current.subscribe('/public/users/crud', onRegisterUser)
         subscribeOnPrivateCanal(userEmail)
         Requests.getAllYourQuestions().then(quests => {
             let subscribersEmails = new Set(quests.map(quest => quest.emailForUser))
 
             subscribersEmails.forEach(emailFor => {
                 subscribeOnUser(emailFor)
+            })
+        })
+        Requests.getAllAnswerQuestions().then(quests => {
+            let subscribesAnswerEmails = new Set(quests.map(quest => quest.emailFromUser))
+
+            subscribesAnswerEmails.forEach(emailFrom => {
+                subscribeOnFromUser(emailFrom)
             })
         })
         setConnect(true)
@@ -151,6 +226,7 @@ const MainWindow = () => {
         debugger
         let email = payload.body;
         console.log("Update statements current user ...>>>>>>> " + email)
+
         dispatch({type: "UPDATE_QUEST"})
 
     }
@@ -168,7 +244,9 @@ const MainWindow = () => {
         sendQueryToUpdateStatementUser: sendQueryToUpdateStatementUser,
         subscribeOnUser: subscribeOnUser,
         unSubscribeOnUser: unSubscribeOnUser,
-        subscribeOnPrivateCanal: subscribeOnPrivateCanal
+        subscribeOnPrivateCanal: subscribeOnPrivateCanal,
+        sendQueryToSubscribeMe: sendQueryToSubscribeMe,
+        sendQueryToUnsubscribeMe: sendQueryToUnsubscribeMe
     }}>
         {(token !== null) ? ( // важно указать здесь, так как Router будет делать редирек на Login, а в Login на MainWindow,
             // получится непрырываня цепочка, так как данные еще не загружены

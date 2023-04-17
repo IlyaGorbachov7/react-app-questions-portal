@@ -20,7 +20,9 @@ const YourQuest = () => {
         triggerOnAddUpdate, setTriggerOnAddUpdate,
         sendQueryToUpdateStatementsQuestionsUser,
         subscribeOnUser,
-        unSubscribeOnUser
+        unSubscribeOnUser,
+        sendQueryToSubscribeMe,
+        sendQueryToUnsubscribeMe
     } = useContext(UserContext)
 
     useEffect(() => {
@@ -149,18 +151,20 @@ const YourQuest = () => {
                     Requests.getCountQuestFromToForUser(newQuest.emailForUser).then(count => {
                         if (count === 0) {
                             subscribeOnUser(newQuest.emailForUser)
+                            sendQueryToSubscribeMe(newQuest.emailFromUser, newQuest.emailForUser)
                         }
-                    })
-                    Requests.createQuestion(newQuest)
-                        .then(r => {
-                            debugger
-                            sendQueryToUpdateStatementsQuestionsUser(newQuest.emailForUser)
-                            setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-                            setVisibleAddQuest({
-                                visible: false
-                            })
 
-                        })
+                        Requests.createQuestion(newQuest)
+                            .then(r => {
+                                debugger
+                                sendQueryToUpdateStatementsQuestionsUser(newQuest.emailForUser)
+                                setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                                setVisibleAddQuest({
+                                    visible: false
+                                })
+
+                            })
+                    })
                 } else {
                     setVisibleError({
                         visible: true,
@@ -173,7 +177,6 @@ const YourQuest = () => {
     }
 
     function updateQuestion(quest) {
-        console.log("Запусаем оно для обнавленя для вопроса" + "и там проводим разнового рода операции")
         setVisibleUpdateQuest({
             visible: true,
             questOnUpdate: {
@@ -188,7 +191,18 @@ const YourQuest = () => {
             callbackAction: (updatedQuest) => {
                 debugger
                 Requests.updateQuestion(updatedQuest).then(r => {
+                    debugger
                     sendQueryToUpdateStatementsQuestionsUser(updatedQuest.emailForUser)
+                    if (quest.emailForUser !== updatedQuest.emailForUser) { // in case if user change forUser, then needed notify old user to update your list queston
+                        sendQueryToUpdateStatementsQuestionsUser(quest.emailForUser)
+                        Requests.getCountQuestFromToForUser(updatedQuest.emailForUser).then(count => {
+                            if (count === 0) {
+                                debugger
+                                subscribeOnUser(updatedQuest.emailForUser)
+                                sendQueryToSubscribeMe(updatedQuest.emailFromUser, updatedQuest.emailForUser)
+                            }
+                        })
+                    }
                     setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
                     setVisibleUpdateQuest({
                         visible: false
@@ -198,7 +212,7 @@ const YourQuest = () => {
         })
     }
 
-    function deleteQuestion(id, emailForUser) {
+    function deleteQuestion(id, emailForUser, emailFromUser) {
         console.log("Question this id: " + id + " is deleted")
         Requests.deleteQuestion(id).then(r => {
             setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
@@ -207,7 +221,8 @@ const YourQuest = () => {
             Requests.getCountQuestFromToForUser(emailForUser).then(count => {
                 debugger
                 if (count === 0) {
-                    unSubscribeOnUser()
+                    unSubscribeOnUser(emailForUser)
+                    sendQueryToUnsubscribeMe(emailFromUser, emailForUser)
                 }
             })
         })
