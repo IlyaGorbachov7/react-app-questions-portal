@@ -1,4 +1,4 @@
-p {
+.para-pmft {
     padding: 0;
     margin: 5px;
     font-size: 20px;
@@ -7,7 +7,12 @@ p {
 
 /* Распложение и размеры*/
 .centerXY {
-    margin-top: 10%;
+    margin-top: 8%;
+    margin-left: 37%;
+    margin-right: 37%;
+}
+.centerXY-higher{
+    margin-top: 6%;
     margin-left: 37%;
     margin-right: 37%;
 }
