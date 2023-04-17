@@ -10,10 +10,18 @@ import EditPanelQuest from "./sub_questcmp/EditPanelQuest";
 import {UserContext} from "../context";
 import ErrorModal from "../ErrrorModal";
 import {useSelector} from "react-redux";
+import {ANSWER_TYPES} from "../../scripts/sub_mainwndw/AnswerQuest";
+import {prepareHtmlMsgErrorTokenTimeExpired, prepareHtmlRequestMsg} from "../../scripts/Registration";
+import ActionModal from "../ActionModal";
+import useToken from "../hooks/useToken";
+import {useNavigate} from "react-router";
 
 const YourQuest = () => {
     const trig = useSelector(state => state.updateQuestReducer)
     const trigUpdateListEmails = useSelector(state => state.updateUserEmailReducer)
+    const [token, setToken, clearToken] = useToken();
+    const navigate = useNavigate()
+
 
     const {
         userSession,
@@ -25,16 +33,19 @@ const YourQuest = () => {
         sendQueryToUnsubscribeMe
     } = useContext(UserContext)
 
-    useEffect(() => {
-        console.log(triggerOnAddUpdate)
-        console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY YOUTR")
-    }, [triggerOnAddUpdate])
     const stoperLoop = useRef(0)
     // trigger чтобы  автоматически сработали нужные useEffect-ы
     // const [triggerOnAddUpdate, setTriggerOnAddUpdate] = useState(true)
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
+    })
+    const [visibleAction, setVisibleAction] = useState({
+        visible: false,
+        btnName: "",
+        msgAction: "",
+        callbackAction: () => {
+        }
     })
     const [visibleAddQuest, setVisibleAddQuest] = useState({
         visible: false,
@@ -145,7 +156,21 @@ const YourQuest = () => {
         setVisibleAddQuest({
             visible: true,
             callbackAction: (newQuest) => {
-                if (newQuest.emailForUser !== "" && newQuest.answerType !== "") {
+                if ((newQuest.answerType === ANSWER_TYPES[3] ||
+                    newQuest.answerType === ANSWER_TYPES[4] ||
+                    newQuest.answerType === ANSWER_TYPES[5]) && newQuest.options.trim().length === 0) {
+                    setVisibleError({
+                        visible: true,
+                        htmlE: prepareHtmlRequestMsg({
+                            options: "Fields don't should be blank"
+                        })
+                    })
+                } else if (newQuest.emailForUser === "" && newQuest.answerType === "") {
+                    setVisibleError({
+                        visible: true,
+                        htmlE: <>Pleas, choose answer type and user email</>
+                    })
+                } else {
                     debugger
                     console.log(newQuest)
                     Requests.getCountQuestFromToForUser(newQuest.emailForUser).then(count => {
@@ -153,7 +178,6 @@ const YourQuest = () => {
                             subscribeOnUser(newQuest.emailForUser)
                             sendQueryToSubscribeMe(newQuest.emailFromUser, newQuest.emailForUser)
                         }
-
                         Requests.createQuestion(newQuest)
                             .then(r => {
                                 debugger
@@ -163,12 +187,33 @@ const YourQuest = () => {
                                     visible: false
                                 })
 
+                            }).catch((err) => {
+                            if (err.response.status === 401) {
+                                setVisibleAction({
+                                    visible: true, btnName: "Log In",
+                                    msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                                        e.preventDefault()
+                                        clearToken()
+                                        navigate('/login')
+                                    }
+                                })
+                            } else {
+                                setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
+                            }
+                        })
+                    }).catch((err) => {
+                        if (err.response.status === 401) {
+                            setVisibleAction({
+                                visible: true, btnName: "Log In",
+                                msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                                    e.preventDefault()
+                                    clearToken()
+                                    navigate('/login')
+                                }
                             })
-                    })
-                } else {
-                    setVisibleError({
-                        visible: true,
-                        htmlE: <>Pleas, choose answer type and user email</>
+                        } else {
+                            setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
+                        }
                     })
                 }
             }
@@ -189,25 +234,52 @@ const YourQuest = () => {
                 options: quest.options
             },
             callbackAction: (updatedQuest) => {
-                debugger
-                Requests.updateQuestion(updatedQuest).then(r => {
-                    debugger
-                    sendQueryToUpdateStatementsQuestionsUser(updatedQuest.emailForUser)
-                    if (quest.emailForUser !== updatedQuest.emailForUser) { // in case if user change forUser, then needed notify old user to update your list queston
-                        sendQueryToUpdateStatementsQuestionsUser(quest.emailForUser)
-                        Requests.getCountQuestFromToForUser(updatedQuest.emailForUser).then(count => {
-                            if (count === 0) {
-                                debugger
-                                subscribeOnUser(updatedQuest.emailForUser)
-                                sendQueryToSubscribeMe(updatedQuest.emailFromUser, updatedQuest.emailForUser)
-                            }
+                if ((updatedQuest.answerType === ANSWER_TYPES[3] ||
+                    updatedQuest.answerType === ANSWER_TYPES[4] ||
+                    updatedQuest.answerType === ANSWER_TYPES[5]) && updatedQuest.options.trim().length === 0) {
+                    setVisibleError({
+                        visible: true,
+                        htmlE: prepareHtmlRequestMsg({
+                            options: "Fields don't should be blank"
                         })
-                    }
-                    setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
-                    setVisibleUpdateQuest({
-                        visible: false
                     })
-                })
+                } else if (updatedQuest.emailForUser === "" && updatedQuest.answerType === "") {
+                    setVisibleError({
+                        visible: true,
+                        htmlE: <>Pleas, choose answer type and user email</>
+                    })
+                } else {
+                    Requests.updateQuestion(updatedQuest).then(r => {
+                        sendQueryToUpdateStatementsQuestionsUser(updatedQuest.emailForUser)
+                        if (quest.emailForUser !== updatedQuest.emailForUser) { // in case if user change forUser, then needed notify old user to update your list queston
+                            sendQueryToUpdateStatementsQuestionsUser(quest.emailForUser)
+                            Requests.getCountQuestFromToForUser(updatedQuest.emailForUser).then(count => {
+                                if (count === 0) {
+                                    debugger
+                                    subscribeOnUser(updatedQuest.emailForUser)
+                                    sendQueryToSubscribeMe(updatedQuest.emailFromUser, updatedQuest.emailForUser)
+                                }
+                            })
+                        }
+                        setTriggerOnAddUpdate((triggerOnAddUpdate) ? false : true)
+                        setVisibleUpdateQuest({
+                            visible: false
+                        })
+                    }).catch((err) => {
+                        if (err.response.status === 401) {
+                            setVisibleAction({
+                                visible: true, btnName: "Log In",
+                                msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                                    e.preventDefault()
+                                    clearToken()
+                                    navigate('/login')
+                                }
+                            })
+                        } else {
+                            setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
+                        }
+                    })
+                }
             }
         })
     }
@@ -245,6 +317,7 @@ const YourQuest = () => {
                     : <></>
             }
             <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
+            <ActionModal visibleAction={visibleAction} setVisibleAction={setVisibleAction}/>
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
                  style={{minWidth: "720px"}}>
                 <div className="d-flex flex-row p-2">

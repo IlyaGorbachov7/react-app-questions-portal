@@ -9,20 +9,31 @@ import RowAnswerQuest from "./sub_questcmp/RowAnswerQuest";
 import AnswerPanelQuestion from "./sub_questcmp/AnswerPanelQuestion";
 import ErrorModal from "../ErrrorModal";
 import {useSelector} from "react-redux";
+import {prepareHtmlMsgErrorTokenTimeExpired, prepareHtmlRequestMsg} from "../../scripts/Registration";
+import useToken from "../hooks/useToken";
+import {useNavigate} from "react-router";
+import ActionModal from "../ActionModal";
 
 const AnswerQuest = () => {
     const trig = useSelector(state => state.updateQuestReducer)
+    const [token, setToken, clearToken] = useToken();
+    const navigate = useNavigate()
+
     const {
         userSession, sendQueryToUpdateStatementsQuestionsUser,
         triggerOnAnswer, setTriggerOnAnswer,
     } = useContext(UserContext)
-    useEffect(() => {
-        console.log(triggerOnAnswer)
-        console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB ANSWER ")
-    }, [triggerOnAnswer])
+
     const [visibleError, setVisibleError] = useState({
         htmlE: <></>,
         visible: false
+    })
+    const [visibleAction, setVisibleAction] = useState({
+        visible: false,
+        btnName: "",
+        msgAction: "",
+        callbackAction: () => {
+        }
     })
     const [visibleAnswerTheQuest, setVisibleAnswerTheQuest] = useState({
         visible: false,
@@ -99,14 +110,14 @@ const AnswerQuest = () => {
                 emailFromUser: clickedQuestion.emailFromUser,
                 emailForUser: clickedQuestion.emailForUser,
                 questionText: clickedQuestion.questionText,
-                answerText: clickedQuestion.answerText, //  это содержимое вопроса
+                answerText: clickedQuestion.answerText,
                 answerType: clickedQuestion.answerType,
                 options: clickedQuestion.options
             },
             // У нас здесь обработка !!!!!
             callbackAction: (answeredQuest) => {
                 // делаем запрос в сервер, что на вопрос мы ответили
-                if (answeredQuest.answerText !== "") {
+                if (answeredQuest.answerText.trim() !== "") {
                     console.log(answeredQuest)
                     Requests.answerTheQuestion(answeredQuest).then(r => {
                         sendQueryToUpdateStatementsQuestionsUser(answeredQuest.emailFromUser)
@@ -115,6 +126,19 @@ const AnswerQuest = () => {
                         setVisibleAnswerTheQuest({
                             visible: false
                         })
+                    }).catch((err) => {
+                        if (err.response.status === 401) {
+                            setVisibleAction({
+                                visible: true, btnName: "Log In",
+                                msgAction: prepareHtmlMsgErrorTokenTimeExpired(), callbackAction: (e) => {
+                                    e.preventDefault()
+                                    clearToken()
+                                    navigate('/login')
+                                }
+                            })
+                        } else {
+                            setVisibleError({htmlE: prepareHtmlRequestMsg(err.response.data), visible: true})
+                        }
                     })
                 } else {
                     setVisibleError({
@@ -136,6 +160,7 @@ const AnswerQuest = () => {
                     : <></>
             }
             <ErrorModal visibleError={visibleError} setVisible={setVisibleError}/>
+            <ActionModal visibleAction={visibleAction} setVisibleAction={setVisibleAction}/>
             <div className="container-fluid mt-4 p-3 block-shadow-color block-border-radius"
                  style={{minWidth: "720px"}}>
                 <div className="d-flex flex-row p-2">
